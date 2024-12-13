@@ -1,0 +1,41 @@
+@import "./loader";
+@import "./table";
+@import "./file-uploader";
+
+// input {
+//   border: 1px solid lightgray;
+//   border-radius: 4px;
+//   padding: 2px;
+// }
+
+// button {
+//   background-color: transparent;
+//   border: 1px solid gray;
+//   padding: 4px;
+//   border-radius: 4px;
+//   width: 32px;
+//   height: 32px;
+// }
+
+/* Bulma overrides */
+a.is-selected {
+  color: white;
+}
+// == END Bulma overrides ==
+
+aside.sidebar-left {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  top: 0;
+  left: 0px;
+  background-color: cyan;
+  overflow-x: hidden;
+  color: white;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
