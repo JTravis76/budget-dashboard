@@ -44,7 +44,7 @@ export const Home = () => {
           ".",
         ),
       ),
-      li(a({ href: "/about", target: "_self" }, "About page")),
+      li(a({ href: "./#/about", target: "_self" }, "About page")),
     ),
   );
 };

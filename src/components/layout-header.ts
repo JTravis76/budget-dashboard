@@ -9,7 +9,7 @@ export const LayoutHeader = () => {
       { class: "navbar", role: "navigation", ariaLabel: "main navigation" },
       div(
         { class: "navbar-brand" },
-        a({ class: "navbar-item is-selected", href: "/" }, "Budget Dashboard"),
+        a({ class: "navbar-item is-selected", href: "./" }, "Budget Dashboard"),
         a(
           {
             role: "button",
@@ -28,13 +28,13 @@ export const LayoutHeader = () => {
         { class: "navbar-menu" },
         div(
           { class: "navbar-start" },
-          a({ class: "navbar-item", href: "./transactions" }, "Transactions"),
+          a({ class: "navbar-item", href: "./#/transactions" }, "Transactions"),
           div(
             { class: "navbar-item has-dropdown is-hoverable" },
             a({ class: "navbar-link" }, "More"),
             div(
               { class: "navbar-dropdown" },
-              a({ class: "navbar-item", href: "./about" }, "About"),
+              a({ class: "navbar-item", href: "./#/about" }, "About"),
               hr({ class: "navbar-divider" }),
               a({ class: "navbar-item" }, "Report an issue"),
             ),
