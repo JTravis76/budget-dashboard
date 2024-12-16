@@ -1,9 +1,9 @@
-//import { transactions } from "../api/data";
+import { transactions } from "../api/data";
 import { Transaction } from "../api/schema";
 
 async function initDB() {
   return new Promise((r) => {
-    //if (getAll().length === 0) saveChanges(transactions);
+    if (getAll().length === 0) saveChanges(transactions);
     r(200);
   });
 }

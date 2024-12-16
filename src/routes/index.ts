@@ -9,29 +9,35 @@ import { Transactions } from "./transactions";
 const routes = [
   {
     path: "*",
-    name: "Not Found",
     component: NotFound(),
   },
   {
     path: "/",
-    name: "Home",
     component: Home(),
   },
   {
     path: "/transactions",
-    name: "Transaction",
     component: Transactions(),
   },
   {
     path: "/about",
-    name: "About",
-    component: About(), // TODO:import("./views/about")
+    component: About(), // TODO: import("./about")
   },
 ] as IRoute[];
 //-------------------------------------------
+window.addEventListener("popstate", () => {
+  //e: PopStateEvent
+  //console.log((e.target as Window).location);
+  window.location.reload();
+});
+//-------------------------------------------
 export const viewrouter = () => {
-  const { pathname } = window.location;
-  const route = routes.find(({ path }) => path.match(pathname));
+  const { hash } = window.location;
+
+  const route = hash.length > 1
+    ? routes.find(({ path }) => path.match(`${hash.replace("#", "")}`))
+    : routes.find(({ path }) => path.match("/"));
+
   if (route) {
     if (route.component instanceof Promise) {
       return Await({
