@@ -1,6 +1,7 @@
 @import "./loader";
 @import "./table";
 @import "./file-uploader";
+@import "./text";
 
 // input {
 //   border: 1px solid lightgray;
@@ -16,6 +17,13 @@
 //   width: 32px;
 //   height: 32px;
 // }
+
+.mt-1 {
+  margin-top: 10px;
+}
+.mt-2 {
+  margin-top: 20px;
+}
 
 /* Bulma overrides */
 a.is-selected {

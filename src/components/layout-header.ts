@@ -36,7 +36,7 @@ export const LayoutHeader = () => {
               { class: "navbar-dropdown" },
               a({ class: "navbar-item", href: "./#/about" }, "About"),
               hr({ class: "navbar-divider" }),
-              a({ class: "navbar-item" }, "Report an issue"),
+              a({ class: "navbar-item", href: "./#/issue" }, "Report an issue"),
             ),
           ),
         ),

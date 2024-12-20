@@ -47,7 +47,7 @@ export default {
     delete: (id: number) => sleep(SLEEP_TIMER, localDb.deleteBy(id)),
   },
   transactions: {
-    get: () => sleep(SLEEP_TIMER, localDb.getAll()),
+    get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, localDb.getFiltered(filter)),
     post: (transactions: ITransaction[]) => {
       // we could check for ID and perform an Update too ?
       transactions.forEach((t) => localDb.create(t));

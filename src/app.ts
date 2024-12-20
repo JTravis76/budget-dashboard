@@ -25,7 +25,7 @@ export const App = () => {
       div(
         LayoutHeader(),
         main(
-          { class: "container" },
+          { class: "container mt-2" },
           viewrouter(),
         ),
         LayoutSideBar(),
