@@ -51,6 +51,45 @@ function getBy(id: number): ITransaction {
   return getAll().find((x) => x.id === id) ?? new Transaction();
 }
 
+/** Read all the transaction based on filtered */
+function getFiltered(filtered?: ISearchFilter) {
+  const all = getAll();
+  let result = all;
+  if (filtered && filtered.search) {
+    let search = filtered.search.toUpperCase();
+    result = all.filter((x) => x.name.includes(search));
+  }
+  // TODO: needs refactored
+  if (filtered && filtered.date.start && filtered.date.end) {
+    let start = filtered.date.start;
+    let end = filtered.date.end;
+    result = all.filter((x) => x.dttm! >= start && x.dttm! <= end);
+  }
+  if (filtered && !filtered.date.start && filtered.date.end) {
+    let end = filtered.date.end;
+    result = all.filter((x) => x.dttm! <= end);
+  }
+  if (filtered && filtered.date.start && !filtered.date.end) {
+    let start = filtered.date.start;
+    result = all.filter((x) => x.dttm! >= start);
+  }
+  // TODO: needs refactored
+  if (filtered && filtered.amount.start && filtered.amount.end) {
+    let start = parseFloat(filtered.amount.start) * -1;
+    let end = parseFloat(filtered.amount.end) * -1;
+    result = all.filter((x) => x.amount! <= start && x.amount! >= end);
+  }
+  if (filtered && !filtered.amount.start && filtered.amount.end) {
+    let end = parseFloat(filtered.amount.end) * -1;
+    result = all.filter((x) => x.amount! >= end);
+  }
+  if (filtered && filtered.amount.start && !filtered.amount.end) {
+    let start = parseFloat(filtered.amount.start) * -1;
+    result = all.filter((x) => x.amount! <= start);
+  }
+  return result;
+}
+
 /** Delete a transaction */
 function deleteBy(id: number) {
   const transactions = getAll();
@@ -67,6 +106,7 @@ export default {
   initDB,
   getAll,
   getBy,
+  getFiltered,
   create,
   update,
   deleteBy,

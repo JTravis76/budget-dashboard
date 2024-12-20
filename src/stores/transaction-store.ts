@@ -5,8 +5,8 @@ import { Transaction } from "../api/schema";
 export const useTransactionStore = () => {
   let transaction = van.state(new Transaction());
   //-------------------------------------------
-  async function getTransactions() {
-    return await http.transactions.get();
+  async function getTransactions(filter?: ISearchFilter) {
+    return await http.transactions.get(filter);
   }
   //-------------------------------------------
   async function getTransactionById(id: number) {

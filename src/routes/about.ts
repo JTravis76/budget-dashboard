@@ -1,13 +1,10 @@
 import van from "vanjs-core";
 
-const { div, br, a } = van.tags;
+const { div, p } = van.tags;
 
 export const About = () => {
-  return div(
-    "This is the about page",
-    br(),
-    a({ href: "./" }, "back to home"),
-    br(),
-    a({ href: "./#/test" }, "Test page"),
+  return div({ class: "box mt-2" },
+    p("Welcome to the About page."),
+    p(" More information to come..."),
   );
 }
