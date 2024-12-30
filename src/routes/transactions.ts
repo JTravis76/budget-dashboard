@@ -12,30 +12,60 @@
 import van from "vanjs-core";
 import { TransactionFilter } from "../components/transaction-filter";
 import { DatagridTransactions } from "../components/datagrid-transactions";
+import { Pagination } from "../components/pagination";
 import $store from "../stores";
 import emitter from "../lib/event-emitter";
+import { SearchFilter } from "../models";
 
 const { div } = van.tags;
 //---------------------------------------------
 let loading = van.state(false);
-let data = van.state(new Array<ITransaction>());
+let pageData = van.state({ filter: new SearchFilter(), data: new Array<ITransaction>() });
 //---------------------------------------------
-emitter.subscribe("search", (filter: ISearchFilter) => {
+emitter.subscribe("search", (filter: ISearchFilter) => reload(filter));
+//---------------------------------------------
+emitter.subscribe("page", (filter: ISearchFilter) => reload(filter, 1));
+//---------------------------------------------
+function reload(filter: ISearchFilter, type: number = 0) {
+  switch (type) {
+    case 0:
+      //search type
+      pageData.val.filter = filter;
+      break;
+    case 1:
+      // pagination type
+      pageData.val.filter.page = filter.page;
+      pageData.val.filter.pagesize = filter.pagesize;
+      break;
+  }
+
   loading.val = true
-  $store.transaction.getTransactions(filter)
+  $store.transaction.getTransactions(pageData.val.filter)
     .then((res) => {
-      data.val = res;
+      pageData.val = res;
       loading.val = false
     });
-});
+}
 //---------------------------------------------
 export const Transactions = async () => {
-  data.val = await $store.transaction.getTransactions();
+  pageData.val = await $store.transaction.getTransactions();
 
   return div(
     TransactionFilter(),
     () => loading.val
       ? div({ class: "skeleton-block" })
-      : DatagridTransactions({ transactions: data.val })
+      : div(
+        Pagination({
+          page: pageData.val.filter.page,
+          pagesize: pageData.val.filter.pagesize,
+          total: pageData.val.filter.pagecount
+        }),
+        DatagridTransactions({ transactions: pageData.val.data }),
+        Pagination({
+          page: pageData.val.filter.page,
+          pagesize: pageData.val.filter.pagesize,
+          total: pageData.val.filter.pagecount
+        }),
+      ),
   );
 };

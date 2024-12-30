@@ -27,6 +27,7 @@ export const App = () => {
         main(
           { class: "container mt-2" },
           viewrouter(),
+          div({ style: "height:180px;" }),
         ),
         LayoutSideBar(),
         LayoutFooter(),
