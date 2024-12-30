@@ -17,7 +17,7 @@
  */
 import van from "vanjs-core";
 import { ModalFrame } from "./modal-frame";
-import { modal } from "../lib/modal";
+import $modal from "../lib/modal";
 import emitter from "../lib/event-emitter";
 import $store from "../stores";
 import { Transaction } from "../api/schema";
@@ -32,7 +32,7 @@ emitter.subscribe("action", save);
 function save() {
   $store.transaction.saveTransaction()
     .then(() => {
-      modal.close("TransactionModal");
+      $modal.close("TransactionModal");
       transaction.val = new Transaction();
     });
 };

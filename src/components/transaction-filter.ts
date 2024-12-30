@@ -1,8 +1,11 @@
 import van from "vanjs-core";
 import emitter from "../lib/event-emitter";
-import { SearchFilter } from "../models"
+import { SearchFilter } from "../models";
+import $store from "../stores";
 
-const { div, label, input, button, small, form } = van.tags;
+const { div, label, input, button, small, form, select, option } = van.tags;
+//---------------------------------------------
+const { tags } = $store.site;
 //---------------------------------------------
 const advSearch = van.state(false);
 let filters = new SearchFilter();
@@ -11,6 +14,21 @@ function reset() {
   filters = new SearchFilter();
 }
 //---------------------------------------------
+let tagSelect = select(
+  {
+    class: "input",
+    onchange: (e: Event) => filters.tag = (e.target as HTMLSelectElement).value
+  },
+  option({ value: "" }, ""),
+);
+
+van.derive(() => {
+  let optionList = new Array<HTMLOptionElement>();
+  optionList = tags.val.map((tag) => option({ value: tag }, tag),
+  );
+  van.add(tagSelect, optionList);
+});
+//-------------------------------------------
 export const TransactionFilter = () => {
   return div({ class: "box" },
     form(
@@ -36,6 +54,15 @@ export const TransactionFilter = () => {
                 placeholder: "Search..",
                 oninput: (e: Event) => filters.search = (e.target as HTMLInputElement).value
               }),
+            ),
+          ),
+        ),
+        div({ class: "column" },
+          div({ class: "field" },
+            label({ class: "field" }, "Tags"),
+            div(
+              { class: "control" },
+              tagSelect,
             ),
           ),
         ),

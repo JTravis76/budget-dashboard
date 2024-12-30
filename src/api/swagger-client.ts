@@ -51,7 +51,7 @@ export default {
     post: (transactions: ITransaction[]) => {
       // we could check for ID and perform an Update too ?
       transactions.forEach((t) => localDb.create(t));
-      return 0;
+      return 200;
     },
   },
   tags: {

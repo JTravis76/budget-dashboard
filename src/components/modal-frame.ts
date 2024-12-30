@@ -6,8 +6,8 @@
  * Slot is any HTML element you wish to display with-in the content body of the modal.
  * The "Save" button fires the emitter back to the parent component.
  */
-import van, { } from "vanjs-core";
-import { modal } from "../lib/modal";
+import van from "vanjs-core";
+import $modal from "../lib/modal";
 import emitter from "../lib/event-emitter";
 
 const { div, header, p, section, footer, button } = van.tags;
@@ -19,7 +19,7 @@ interface IProp {
 }
 //-------------------------------------------
 export const ModalFrame = (props: IProp, slot: Element) => {
-  const close = () => modal.close(props.id);
+  const close = () => $modal.close(props.id);
   //-------------------------------------------
   return div(
     { id: props.id, class: "modal" },

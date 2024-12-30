@@ -12,19 +12,22 @@
  * - Modal component is triggered via a plug-in, passing in the element ID.
  */
 import van from "vanjs-core";
-import { ModalTransaction } from "../components/modal-transaction";
-import { ModalImport } from "../components/modal-import";
-import { modal } from "../lib/modal";
+import { ModalTransaction } from "./modal-transaction";
+import { ModalImport } from "./modal-import";
+import { IconEdit, IconRemove } from "./icons";
+import $modal from "../lib/modal";
+import $dialog from "../lib/dialog";
 import $store from "../stores";
 import { Transaction } from "../api/schema";
 
-const { div, table, thead, tbody, tr, th, td, button, input, select, option } = van.tags;
+const { div, table, thead, tbody, tfoot, tr, th, td, button, input, select, option, span } = van.tags;
 //---------------------------------------------
 const { tags } = $store.site;
 const { transaction } = $store.transaction;
 //---------------------------------------------
 let memoId = van.state(0);
 let tagId = van.state(0);
+let total = van.state(0.0);
 //---------------------------------------------
 async function edit(id: number) {
   transaction.val = new Transaction();
@@ -33,15 +36,23 @@ async function edit(id: number) {
     // But wanted to fetch from server versus copy data from data-row.
     await $store.transaction.getTransactionById(id);
   }
-  modal.open("TransactionModal");
+  $modal.open("TransactionModal");
 };
 //---------------------------------------------
 function remove(id: number) {
   if (id > 0) {
-    $store.transaction.removeTransaction(id)
-      .then(() => {
-        window.location.reload();
-      });
+    $dialog({
+      title: "Confirm",
+      message: "Are you sure you want to remove this transaction?",
+      type: "yesno",
+    }).then((res) => {
+      if (res) {
+        $store.transaction.removeTransaction(id)
+          .then(() => {
+            window.location.reload();
+          });
+      }
+    });
   }
 };
 //-------------------------------------------
@@ -53,30 +64,38 @@ function save() {
 }
 //-------------------------------------------
 export const DatagridTransactions = (props: { transactions: ITransaction[] }) => {
+  total.val = 0.0;
 
   const rows = new Array<HTMLTableRowElement>();
   props.transactions.forEach((r) => {
+    total.val = total.val + parseFloat(r.amount.toString());
     rows.push(
       tr(
         td(
-          button({
-            class: "button is-primary is-small is-outlined",
-            onclick: () => edit(r.id),
-          }, "edit"),
-          button({
-            class: "button is-danger is-small is-outlined",
-            onclick: () => remove(r.id),
-          }, "del"),
+          div({ class: "buttons" },
+            button({
+              class: "button is-primary is-small is-outlined",
+              onclick: () => edit(r.id),
+            },
+              IconEdit({ width: "16", height: "16" }),
+            ),
+            button({
+              class: "button is-danger is-small is-outlined",
+              onclick: () => remove(r.id),
+            },
+              IconRemove({ width: "16", height: "16" }),
+            ),
+          ),
         ),
         td(
           div({ class: "text-nowrap" }, r.dttm),
         ),
         td(r.transaction),
         td(
-          div({ class: "zz-text-ellipsis", title: r.name }, r.name),
+          div({ style: "max-width:350px", class: "text-ellipsis", title: r.name }, r.name),
         ),
         td(
-          () => memoId.val == 0
+          () => memoId.val != r.id
             ? button(
               {
                 class: "button is-small",
@@ -105,7 +124,7 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
         ),
         td(r.amount),
         td(
-          () => tagId.val == 0
+          () => tagId.val != r.id
             ? button(
               {
                 class: "button is-small",
@@ -142,7 +161,7 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
     div(
       { class: "column" },
       table(
-        { class: "table" },
+        { class: "table is-striped is-narrow is-fullwidth is-hoverable" },
         thead(
           tr(
             th(
@@ -152,7 +171,7 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
               // }, "add"),
               button({
                 class: "button is-secondary is-small",
-                onclick: () => modal.open("ImportModal"),
+                onclick: () => $modal.open("ImportModal"),
               }, "Import"),
             ),
             th("Date"),
@@ -169,6 +188,16 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
           }
           return tbody(rows);
         },
+        tfoot(
+          tr(
+            td({ colSpan: 5 }, ""),
+            td({ colSpan: 2 },
+              span(
+                { class: "has-text-weight-bold" },
+                "$", total.val.toFixed(2)),
+            ),
+          ),
+        )
       ),
     ),
     ModalTransaction(),

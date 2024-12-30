@@ -10,6 +10,10 @@ interface IDateRange {
 
 interface ISearchFilter {
   search: string | null;
+  tag: string | null;
   date: IDateRange;
   amount: IDateRange;
+  page: number;
+  pagesize: number
+  pagecount: number;
 }

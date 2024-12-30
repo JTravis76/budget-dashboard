@@ -1,7 +1,8 @@
 import { transactions } from "../api/data";
 import { Transaction } from "../api/schema";
+import { SearchFilter } from "../models";
 
-async function initDB() {
+async function initDB(): Promise<number> {
   return new Promise((r) => {
     if (getAll().length === 0) saveChanges(transactions);
     r(200);
@@ -52,42 +53,73 @@ function getBy(id: number): ITransaction {
 }
 
 /** Read all the transaction based on filtered */
-function getFiltered(filtered?: ISearchFilter) {
-  const all = getAll();
+function getFiltered(filtered = new SearchFilter()) {
+  const all = getAll().sort((a, b) => {
+    let d1 = new Date(a.dttm ?? "");
+    let d2 = new Date(b.dttm ?? "");
+    return d1 < d2 ? 1 : -1;
+  });
   let result = all;
-  if (filtered && filtered.search) {
+
+  // == Search filter ==
+  if (filtered.search) {
     let search = filtered.search.toUpperCase();
-    result = all.filter((x) => x.name.includes(search));
+    result = all.filter((x) => x.name?.toUpperCase().includes(search));
   }
-  // TODO: needs refactored
-  if (filtered && filtered.date.start && filtered.date.end) {
-    let start = filtered.date.start;
-    let end = filtered.date.end;
-    result = all.filter((x) => x.dttm! >= start && x.dttm! <= end);
+
+  // == Tag filter ==
+  if (filtered.tag) {
+    let tag = filtered.tag;
+    result = result.filter((x) => x.tag == tag);
   }
-  if (filtered && !filtered.date.start && filtered.date.end) {
-    let end = filtered.date.end;
-    result = all.filter((x) => x.dttm! <= end);
+
+  // == Date filter ==
+  let start = new Date(filtered.date.start ?? "");
+  let end = new Date(filtered.date.end ?? "");
+
+  if (filtered.date.start && filtered.date.end)
+    result = result.filter((x) => new Date(x.dttm!) >= start && new Date(x.dttm!) <= end);
+
+  if (!filtered.date.start && filtered.date.end)
+    result = result.filter((x) => new Date(x.dttm!) <= end);
+
+  if (filtered.date.start && !filtered.date.end)
+    result = result.filter((x) => new Date(x.dttm!) >= start);
+
+  // == Amount filter ==
+  // TOOD: only returning negative (DEBIT) values, need to include CREDIT
+  if (filtered.amount.start && filtered.amount.end) {
+    let from = parseFloat(filtered.amount.start) * -1;
+    let to = parseFloat(filtered.amount.end) * -1;
+    result = result.filter((x) => x.amount! <= from && x.amount! >= to);
   }
-  if (filtered && filtered.date.start && !filtered.date.end) {
-    let start = filtered.date.start;
-    result = all.filter((x) => x.dttm! >= start);
+  if (!filtered.amount.start && filtered.amount.end) {
+    let to = parseFloat(filtered.amount.end) * -1;
+    result = result.filter((x) => x.amount! >= to);
   }
-  // TODO: needs refactored
-  if (filtered && filtered.amount.start && filtered.amount.end) {
-    let start = parseFloat(filtered.amount.start) * -1;
-    let end = parseFloat(filtered.amount.end) * -1;
-    result = all.filter((x) => x.amount! <= start && x.amount! >= end);
+  if (filtered.amount.start && !filtered.amount.end) {
+    let from = parseFloat(filtered.amount.start) * -1;
+    result = result.filter((x) => x.amount! <= from);
   }
-  if (filtered && !filtered.amount.start && filtered.amount.end) {
-    let end = parseFloat(filtered.amount.end) * -1;
-    result = all.filter((x) => x.amount! >= end);
+
+  // == Pagination ==
+  filtered.pagecount = Math.ceil(result.length / filtered.pagesize);
+  let paginatedData = new Array<ITransaction>();
+  let skipTo = (filtered.page - 1) * filtered.pagesize;
+  let take = result.length > filtered.pagesize
+    ? skipTo + filtered.pagesize
+    : result.length;
+
+  for (let i = skipTo; i < take; i++) {
+    // !! last page might be less than "take" value !!
+    if (result[i]) paginatedData.push(result[i]);
   }
-  if (filtered && filtered.amount.start && !filtered.amount.end) {
-    let start = parseFloat(filtered.amount.start) * -1;
-    result = all.filter((x) => x.amount! <= start);
+  result = paginatedData;
+
+  return {
+    filter: filtered,
+    data: result
   }
-  return result;
 }
 
 /** Delete a transaction */
