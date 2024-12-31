@@ -4,7 +4,7 @@ import { SearchFilter } from "../models";
 
 async function initDB(): Promise<number> {
   return new Promise((r) => {
-    if (getAll().length === 0) saveChanges(transactions);
+    if (getAll().length === 0) saveChanges(transactions as unknown as ITransaction[]);
     r(200);
   });
 }
