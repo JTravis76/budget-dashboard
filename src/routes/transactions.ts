@@ -50,7 +50,7 @@ function reload(filter: ISearchFilter, type: number = 0) {
 export const Transactions = async () => {
   pageData.val = await $store.transaction.getTransactions();
 
-  return div(
+  return div({ class: "container mt-2" },
     TransactionFilter(),
     () => loading.val
       ? div({ class: "skeleton-block" })

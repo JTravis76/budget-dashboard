@@ -16,6 +16,8 @@ import { Await } from "./lib/await";
 const { div, main } = van.tags;
 //-------------------------------------------
 export const App = () => {
+  $store.user.getUser();
+  //-------------------------------------------
   return Await({
     value: $store.site.preloadData(),
     Loading: () => PageLoader(),
@@ -25,7 +27,6 @@ export const App = () => {
       div(
         LayoutHeader(),
         main(
-          { class: "container mt-2" },
           viewrouter(),
           div({ style: "height:180px;" }),
         ),

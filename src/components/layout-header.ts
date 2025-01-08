@@ -1,8 +1,10 @@
 import van from "vanjs-core";
+import $store from "../stores";
 
 const { header, nav, div, a, span, hr, strong } = van.tags;
 
 export const LayoutHeader = () => {
+  let expanded = van.state(false);
   return header(
     { class: "" },
     nav(
@@ -13,10 +15,9 @@ export const LayoutHeader = () => {
         a(
           {
             role: "button",
-            class: "navbar-burger",
+            class: () => expanded.val ? "navbar-burger is-active" : "navbar-burger",
             ariaLabel: "menu",
-            ariaExpanded: "false",
-            dataTarget: "navbarBasicExample",
+            onclick: () => expanded.val = !expanded.val
           },
           span({ ariaHidden: true }),
           span({ ariaHidden: true }),
@@ -25,10 +26,17 @@ export const LayoutHeader = () => {
         ),
       ),
       div(
-        { class: "navbar-menu" },
+        {
+          class: () => expanded.val ? "navbar-menu is-active" : "navbar-menu",
+        },
         div(
           { class: "navbar-start" },
-          a({ class: "navbar-item", href: "./#/transactions" }, "Transactions"),
+          () => $store.user.authenticated.val
+            ? a({ class: "navbar-item", href: "./#/dashboard" }, "Dashboard")
+            : "",
+          () => $store.user.authenticated.val
+            ? a({ class: "navbar-item", href: "./#/transactions" }, "Transactions")
+            : "",
           div(
             { class: "navbar-item has-dropdown is-hoverable" },
             a({ class: "navbar-link" }, "More"),
@@ -45,11 +53,28 @@ export const LayoutHeader = () => {
         { class: "navbar-end" },
         div(
           { class: "navbar-item" },
-          div(
-            { class: "buttons" },
-            a({ class: "button is-primary" }, strong("Sign Up")),
-            a({ class: "button is-light" }, "Log in"),
-          ),
+          () => (window.location.hash !== "#/login")
+            ? div(
+              { class: "buttons" },
+              // a({ class: "button is-primary" }, strong("Sign Up")),
+              () => $store.user.authenticated.val
+                ? a(
+                  {
+                    class: "button is-outline-light",
+                    href: "#",
+                    onclick: (e: Event) => {
+                      e.preventDefault();
+                      $store.user.signout().then(() => {
+                        window.location.href = "/";
+                      });
+                    }
+                  },
+                  strong("Sign Out")
+                )
+                : a({ class: "button is-light", href: "./#/login" }, strong("Log in")),
+
+            )
+            : "",
         ),
       ),
     ),
