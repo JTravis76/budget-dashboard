@@ -4,8 +4,8 @@ interface Events {
   [key: string]: Function[];
 }
 
-export class EventEmitter {
-  public _events: Events;
+class EventEmitter {
+  private _events: Events;
 
   constructor(events?: Events) {
     this._events = events || {};

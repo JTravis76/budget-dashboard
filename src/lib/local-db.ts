@@ -42,7 +42,15 @@ function update(transaction: ITransaction) {
 
 /** Read all the transactions */
 function getAll(): ITransaction[] {
-  return JSON.parse(window.localStorage.getItem("db") ?? "[]");
+  let all = JSON.parse(window.localStorage.getItem("db") ?? "[]") as ITransaction[];
+  if (all.length > 0) {
+    all = all.sort((a, b) => {
+      let d1 = new Date(a.dttm ?? "");
+      let d2 = new Date(b.dttm ?? "");
+      return d1 < d2 ? 1 : -1;
+    });
+  }
+  return all;
 }
 
 /** Read the transaction by ID
@@ -54,11 +62,7 @@ function getBy(id: number): ITransaction {
 
 /** Read all the transaction based on filtered */
 function getFiltered(filtered = new SearchFilter()) {
-  const all = getAll().sort((a, b) => {
-    let d1 = new Date(a.dttm ?? "");
-    let d2 = new Date(b.dttm ?? "");
-    return d1 < d2 ? 1 : -1;
-  });
+  const all = getAll();
   let result = all;
 
   // == Search filter ==

@@ -65,7 +65,7 @@ export const LayoutHeader = () => {
                     onclick: (e: Event) => {
                       e.preventDefault();
                       $store.user.signout().then(() => {
-                        window.location.href = "/";
+                        window.location.href = "./";
                       });
                     }
                   },

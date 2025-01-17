@@ -1,16 +1,18 @@
 # Budget Dashboard
 
-After being introduce to VanJS, I thought it would be interesting to build an application to review some bank transactions. Some features would be to:
+After being introduce to VanJS, I thought it would be interesting to build an application to review some bank transactions. And hopefully, come up with a form of a budget. Ha!  
+Some features would be to:
 
 - Display a list of bank transactions
 - Import transaction via a CSV file
 - Edit memo and tags for a transaction
+- Search and filtering transactions
 - Removing a transaction.
 
 Some nice-to-have:
 
-- Search and filtering transactions
-- Charts
+- Tag rule wizard
+- Charts w/ page data slicers
 - Reports
 
 Having a strong background in VueJS and TypeScript, you might see some similar approach find in VueJS, like Views, Components, Router, and Stores. Also, I am a strong advocate for TypeScript. So use it, love it :-)

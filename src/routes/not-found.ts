@@ -8,7 +8,7 @@ export const NotFound = () => {
       h1({ class: "is-size-3" }, "Oops! We broke a link"),
       "Take me ",
       a({ href: "./" }, "home,"),
-      " county road."
+      " country road."
     ),
   );
 };

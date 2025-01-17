@@ -53,6 +53,7 @@ export default {
       transactions.forEach((t) => localDb.create(t));
       return 200;
     },
+    getAll: () => sleep(SLEEP_TIMER, localDb.getAll()),
   },
   tags: {
     get: () => sleep(SLEEP_TIMER, tags),

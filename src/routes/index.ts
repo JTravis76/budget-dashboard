@@ -3,15 +3,12 @@ import { PageLoader } from "../components/page-loader";
 import $store from "../stores";
 //-------------------------------------------
 import { Home } from "./home";
-import { NotFound } from "./not-found";
-import { About } from "./about";
-import { Transactions } from "./transactions";
 import { Login } from "./login";
 //-------------------------------------------
 const routes = [
   {
     path: "*",
-    component: NotFound(),
+    component: import("./not-found"),
     meta: {},
   },
   {
@@ -25,13 +22,18 @@ const routes = [
     meta: {},
   },
   {
+    path: "/dashboard",
+    component: import("./dashboard"),
+    meta: { auth: true },
+  },
+  {
     path: "/transactions",
-    component: Transactions(),
+    component: import("./transactions"),
     meta: { auth: true },
   },
   {
     path: "/about",
-    component: About(), // TODO: import("./about")
+    component: import("./about"),
     meta: {},
   },
 ] as IRoute[];
@@ -50,15 +52,36 @@ export const viewrouter = () => {
     : routes.find(({ path }) => path.match("/"));
 
   if (route) {
-    if (route.meta.auth && !$store.user.authenticated.val) return Login(route.path);
+    if (route.meta.auth && !$store.user.authenticated.val)
+      return Login(route.path);
+
     if (route.component instanceof Promise) {
       return Await({
-        value: route.component,
+        value: new Promise<HTMLElement>((r) => {
+          (route.component as Promise<any>).then((d) => {
+            if (Object.entries(d).length === 0) {
+              // async component
+              r(d);
+            }
+            else {
+              // import module component
+              let html = (Object.values(d)[0] as any)() as HTMLElement
+              r(html);
+            }
+          });
+        }),
         Loading: () => PageLoader(),
-        Error: () => "error"
-      },
-        (d) => d
-      );
+        Error: () => "ERROR"
+      }, (v) => v);
+
+      // = async component option
+      // return Await({
+      //   value: route.component,
+      //   Loading: () => PageLoader(),
+      //   Error: () => "error"
+      // },
+      //   (d) => d
+      // );
     } else {
       return route.component;
     }

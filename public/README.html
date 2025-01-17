@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="budget-dashboard">Budget Dashboard</h1>
+<p>After being introduce to VanJS, I thought it would be interesting to build an application to review some bank transactions. And hopefully, come up with a form of a budget. Ha!</p>
+<p>Some features would be to:</p>
+<ul>
+<li>Display a list of bank transactions</li>
+<li>Import transaction via a CSV file</li>
+<li>Edit memo and tags for a transaction</li>
+<li>Search and filtering transactions</li>
+<li>Removing a transaction.</li>
+</ul>
+<p>Some nice-to-have:</p>
+<ul>
+<li>Tag rule wizard</li>
+<li>Charts w/ page data slicers</li>
+<li>Reports</li>
+</ul>
+<p>Having a strong background in VueJS and TypeScript, you might see some similar approach find in VueJS, like Views, Components, Router, and Stores. Also, I am a strong advocate for TypeScript. So use it, love it :-)</p>
+<h2 id="css-and-theme">CSS and Theme</h2>
+<p>For this project, we are using SCSS along with the Bulma CSS library. Bulma is loaded via CDN provide by CloudFlare.</p>
+<h2 id="route-and-views">Route and Views</h2>
+<p>IMHO, Views components are the same as routes. When you hit the ‘About’ page from the URL, you are displayed with the ‘About’ component. Under the <code>src/routes</code> directory, you will find both routing logic and view components.</p>
+<h3 id="asynchronous-component">Asynchronous Component</h3>
+<p>Component at the router/view level might be asynchronous. The best way to handle was to test for a <code>typeof Promise</code> and use the “Await” library provided in the VanJS-UI kit.</p>
+<blockquote>
+<p>NOTE: VanJS-UI kit is NOT used in this project. I only copied the “Await” method. See <code>src/lib/await.ts</code>.</p>
+</blockquote>
+<h2 id="props-slot-and-emitters">Props, Slot, and Emitters</h2>
+<p>Oftentimes, components might be a shell that is usable. One example of this is a Modal. Modal is a window that appears over all other windows and can display various types of content. “Modal-Frame” in this project, uses props, slot, and emitters. See <code>src/components/modal-frame.ts</code></p>
+<ul>
+<li>Props use to pass in data from the parent component to the child component (Modal-Frame).</li>
+<li>Slot is the HTML content to display in the body of the Modal-Frame.</li>
+<li>Emitter is the action triggered by the child component (Modal-Frame) back to the parent component.</li>
+</ul>
+<h2 id="central-store">Central Store</h2>
+<p>VanJS is able to maintain a reactive state. This makes is easy to create a central store that allows all components to read and write data from a single-source-of-truth. To keep things clean, the store is broken into module and are namespace. See <code>src/stores/index.ts</code>.</p>
+<h2 id="api-and-data-store">API and Data Store</h2>
+<p>To get things moving, HTTP client is a wrapper around Fetch API with the attempt to closely match Axios client (as far as general use). The “swagger-client” is the controller for sending/receiving requests. So the “swagger-client” might act a API middleware before calling the LocalDB.</p>
+<p>LocalDB is a library for CRUD operations to the browser’s local-storage.</p>
+<p>Once the actual API is ready, we should be to easily switch from LocalDB to API endpoints.</p>
+<h1 id="contribute">Contribute</h1>
+<p>See a better way to achieving something or features that would be useful, submit a pull-requests!</p>
+<h1 id="license">License</h1>
+<p>MIT</p>
+</div>
+</body>
+
+</html>

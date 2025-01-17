@@ -194,7 +194,8 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
             td({ colSpan: 2 },
               span(
                 { class: "has-text-weight-bold" },
-                "$", total.val.toFixed(2)),
+                "$", Math.abs(total.val).toFixed(2)
+              ),
             ),
           ),
         )

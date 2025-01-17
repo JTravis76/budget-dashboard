@@ -20,3 +20,19 @@ interface ISearchFilter {
   pagesize: number
   pagecount: number;
 }
+
+//type SlicerType = "checkbox" | "input";
+
+interface ISlicerData {
+  text: string;
+  value: string;
+  selected: boolean;
+}
+
+interface ISlicer {
+  title: string;
+  active: boolean;
+  collapse: boolean;
+  //type: SlicerType;
+  data: ISlicerData[] | string;
+}
