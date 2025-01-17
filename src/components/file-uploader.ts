@@ -62,11 +62,17 @@ function processFile(file: Blob) {
           const data = x.replaceAll('"', "").split(",");
 
           let i = 0;
-          const transaction = {} as Record<string, string>;
+          const transaction = {} as Record<string, string | number>;
           for (const key of headers) {
             transaction[key] = data[i];
             i += 1;
           }
+
+          transaction.amount = parseFloat(transaction.amount.toString());
+
+          // TODO: run the transaction through the Auto-Tag rules generator.
+          // ... coming soon
+          // transaction.tag = assignTag(transaction);
 
           let t = new Transaction(transaction);
           if (t.dttm && t.name) transactions.push(t);

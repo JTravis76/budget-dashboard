@@ -49,8 +49,10 @@ export default {
   transactions: {
     get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, localDb.getFiltered(filter)),
     post: (transactions: ITransaction[]) => {
-      // we could check for ID and perform an Update too ?
-      transactions.forEach((t) => localDb.create(t));
+      transactions.forEach((t) => {
+        if (t.id === 0) localDb.create(t);
+        else if (t.id > 0) localDb.update(t)
+      });
       return 200;
     },
     getAll: () => sleep(SLEEP_TIMER, localDb.getAll()),

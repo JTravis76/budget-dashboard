@@ -31,6 +31,7 @@ export const useUserStore = () => {
       let arr = document.cookie.split("=");
       // check if expired
       authenticated.val = (new Date() <= new Date(arr[1]));
+      // TODO: with every call, if user is auth then increase the expire date
       r(200);
     });
   }
