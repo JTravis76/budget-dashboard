@@ -1,0 +1,1 @@
+import{v as s}from"./index-a13a690f.js";const{div:t,iframe:o}=s.tags,i=()=>t({class:"container mt-2"},t({class:"box"},o({src:"./README.html",style:"width: 100%;",onload:s=>{let t=s.target;if(t.contentWindow){const s=t.contentWindow.document.body;t.style.height=(s.scrollHeight+250).toString()+"px"}}})));export{i as About};

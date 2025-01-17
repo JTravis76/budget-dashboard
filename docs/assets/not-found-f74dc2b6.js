@@ -1,0 +1,1 @@
+import{v as s}from"./index-a13a690f.js";const{div:o,h1:e,a:a}=s.tags,r=()=>o({class:"container mt-2"},o({class:"box mt-2"},e({class:"is-size-3"},"Oops! We broke a link"),"Take me ",a({href:"./"},"home,")," country road."));export{r as NotFound};
