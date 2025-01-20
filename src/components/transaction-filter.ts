@@ -5,7 +5,7 @@ import $store from "../stores";
 
 const { div, label, input, button, small, form, select, option } = van.tags;
 //---------------------------------------------
-const { tags } = $store.site;
+const { tags } = $store.tag;
 //---------------------------------------------
 const advSearch = van.state(false);
 let filters = new SearchFilter();

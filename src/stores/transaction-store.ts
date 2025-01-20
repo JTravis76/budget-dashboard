@@ -34,11 +34,6 @@ export const useTransactionStore = () => {
     });
   }
   //-------------------------------------------
-  function assignTag(transaction: ITransaction) {
-
-    return "";
-  }
-  //-------------------------------------------
   return {
     transaction,
     getTransactions,
@@ -46,6 +41,5 @@ export const useTransactionStore = () => {
     saveTransaction,
     saveTransactions,
     removeTransaction,
-    assignTag,
   };
 }

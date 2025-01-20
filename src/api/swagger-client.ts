@@ -2,7 +2,6 @@ import HttpClient from "../lib/http-client";
 import { sleep } from "../lib/utilities";
 import { tags } from "./data";
 import localDb from "../lib/local-db";
-import { Transaction } from "./schema";
 //-------------------------------------------
 const SLEEP_TIMER = 800;
 //-------------------------------------------
@@ -27,34 +26,12 @@ export default {
   },
   transaction: {
     getById: (id: number) => sleep(SLEEP_TIMER, localDb.getBy(id)),
-    post: (id: number, memo: string | null, tag: string | null) => {
-      // simulate some API middleware
-      // by taking the pass argurments and building a new object to send to DB
-      let transaction = new Transaction({ id, memo, tag });
-      if (id > 0) {
-        localDb.getAll().forEach((t) => {
-          if (t.id === id) {
-            t.memo = memo;
-            t.tag = tag;
-            localDb.update(t);
-            transaction = t;
-          }
-        });
-      }
-
-      return transaction;
-    },
+    post: (id: number, memo: string | null, tag: string | null) => sleep(SLEEP_TIMER, localDb.updateMemoTag(id, memo, tag)),
     delete: (id: number) => sleep(SLEEP_TIMER, localDb.deleteBy(id)),
   },
   transactions: {
     get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, localDb.getFiltered(filter)),
-    post: (transactions: ITransaction[]) => {
-      transactions.forEach((t) => {
-        if (t.id === 0) localDb.create(t);
-        else if (t.id > 0) localDb.update(t)
-      });
-      return 200;
-    },
+    post: (transactions: ITransaction[]) => sleep(SLEEP_TIMER, localDb.saveOrUpdate(transactions)),
     getAll: () => sleep(SLEEP_TIMER, localDb.getAll()),
   },
   tags: {
