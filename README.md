@@ -31,6 +31,18 @@ Component at the router/view level might be asynchronous. The best way to handle
 
 > NOTE: VanJS-UI kit is NOT used in this project. I only copied the "Await" method. See `src/lib/await.ts`.
 
+I my recent release, I was able to import the route component by doing this.
+
+```ts
+{
+  path: "/about",
+  component: import("./about"),
+  meta: {},
+},
+```
+
+Importing a route convert the return result from `typeof Promise` to a `typeof Module`. Doing this approach, in-sure the component is not rendered or executed until it's actual needed.
+
 ## Props, Slot, and Emitters
 
 Oftentimes, components might be a shell that is usable. One example of this is a Modal. Modal is a window that appears over all other windows and can display various types of content. "Modal-Frame" in this project, uses props, slot, and emitters. See `src/components/modal-frame.ts`

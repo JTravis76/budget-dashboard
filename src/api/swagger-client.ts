@@ -33,6 +33,7 @@ export default {
     get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, localDb.getFiltered(filter)),
     post: (transactions: ITransaction[]) => sleep(SLEEP_TIMER, localDb.saveOrUpdate(transactions)),
     getAll: () => sleep(SLEEP_TIMER, localDb.getAll()),
+    deleteAll: () => sleep(SLEEP_TIMER, localDb.deleteAll()),
   },
   tags: {
     get: () => sleep(SLEEP_TIMER, tags),

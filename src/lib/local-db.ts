@@ -6,7 +6,8 @@ const dbName = "db";
 
 async function initDB(): Promise<number> {
   return new Promise((r) => {
-    if (getAll().length === 0) saveChanges(transactions);
+    if (!window.localStorage.getItem(dbName))
+      saveChanges(transactions);
     r(200);
   });
 }
@@ -27,8 +28,8 @@ function saveOrUpdate(transactions: ITransaction[]) {
 
 /** Update the transaction with either memo or tag */
 function updateMemoTag(id: number, memo: string | null, tag: string | null) {
+  let transaction = new Transaction({ id, memo, tag });
   if (id > 0) {
-    let transaction = new Transaction({ id, memo, tag });
     getAll().forEach((t) => {
       if (t.id === id) {
         t.memo = memo;
@@ -165,6 +166,12 @@ function deleteBy(id: number) {
   saveChanges(transactions);
 }
 
+/** Removes all the records. */
+function deleteAll() {
+  window.localStorage.setItem(dbName, "[]");
+  return 200;
+}
+
 export default {
   initDB,
   getAll,
@@ -173,6 +180,7 @@ export default {
   create,
   update,
   deleteBy,
+  deleteAll,
   saveOrUpdate,
   updateMemoTag,
 };

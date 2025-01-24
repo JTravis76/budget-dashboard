@@ -34,6 +34,10 @@ export const useTransactionStore = () => {
     });
   }
   //-------------------------------------------
+  async function resetTansactions() {
+    return await http.transactions.deleteAll();
+  }
+  //-------------------------------------------
   return {
     transaction,
     getTransactions,
@@ -41,5 +45,6 @@ export const useTransactionStore = () => {
     saveTransaction,
     saveTransactions,
     removeTransaction,
+    resetTansactions,
   };
 }

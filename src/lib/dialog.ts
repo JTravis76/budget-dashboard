@@ -58,7 +58,7 @@ async function createDialog(opt?: string | IDialogOption): Promise<boolean> {
               class: "button is-small is-primary",
               onclick: () => {
                 dlg.close("YES");
-                r(dlg.returnValue == "YES");
+                r(true);
                 dlg.remove();
               }
             },
@@ -70,7 +70,7 @@ async function createDialog(opt?: string | IDialogOption): Promise<boolean> {
               class: "button is-small is-default",
               onclick: () => {
                 dlg.close("NO");
-                r(dlg.returnValue == "NO");
+                r(false);
                 dlg.remove();
               }
             },
