@@ -1,6 +1,6 @@
 import van from "vanjs-core";
 import localDb from "../lib/local-db";
-import { useTagStore } from "./tag-store";
+import $store from "./index";
 
 export const useSiteStore = () => {
   let pageloading = van.state(false);
@@ -9,7 +9,8 @@ export const useSiteStore = () => {
   async function preloadData() {
     return Promise.all([
       localDb.initDB(),
-      useTagStore().getTags(),
+      $store.tag.getTags(),
+      $store.tag.getRules(),
     ]);
   }
   //-------------------------------------------

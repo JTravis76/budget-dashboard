@@ -9,93 +9,92 @@ import $store from "../stores";
 import { Transaction } from "../api/schema";
 
 const { div, input, label, span, strong } = van.tags
-//-------------------------------------------
-function onReset(e: DragEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-  document.getElementsByClassName("dropzone")[0].classList.remove("is-dragover");
-}
-//-------------------------------------------
-function drop(e: DragEvent) {
-  e.preventDefault();
-  document.getElementsByClassName("dropzone")[0].classList.remove("is-dragover");
-  document.getElementsByClassName("dropzone")[0].classList.add("is-uploading");
 
-  if (e.dataTransfer && e.dataTransfer.items) {
-    [...e.dataTransfer.items].forEach((item) => {
-      if (item.kind === "file") {
-        const file = item.getAsFile();
-        if (file) processFile(file);
-      }
-    });
-  } else if (e.dataTransfer && e.dataTransfer.files) {
-    [...e.dataTransfer.files].forEach((file) => {
-      processFile(file);
-    });
-  }
-}
-//-------------------------------------------
-function upload() {
-  const input = document.getElementById("file") as HTMLInputElement;
-  if (input && input.files) {
-    [...input.files].forEach((file) => {
-      if (file.type == "text/csv") {
-        processFile(file);
-      }
-    });
-  }
-}
-//-------------------------------------------
-function processFile(file: Blob) {
-  const reader = new FileReader();
-  reader.addEventListener("load", (ev: ProgressEvent) => {
-
-    const result = (ev.target as FileReader).result;
-    if (result && typeof result === "string") {
-      let cnt = 0;
-      let headers = new Array<string>();
-      const transactions = new Array<ITransaction>();
-      result.split("\r\n").forEach((x) => {
-        if (cnt === 0) {
-          headers = x.split(",");
-        } else {
-          const data = x.replaceAll('"', "").split(",");
-
-          let i = 0;
-          const transaction = {} as Record<string, string | number>;
-          for (const key of headers) {
-            transaction[key] = data[i];
-            i += 1;
-          }
-
-          transaction.amount = parseFloat(transaction.amount.toString());
-
-          // TODO: run the transaction through the Auto-Tag rules generator.
-          // ... coming soon
-          // transaction.tag = assignTag(transaction);
-
-          let t = new Transaction(transaction);
-          if (t.dttm && t.name) transactions.push(t);
-        }
-        cnt += 1;
-      });
-
-      // Now we save the new transactions
-      $store.transaction.saveTransactions(transactions)
-        .then((res) => {
-          if (res === 200) {
-            document.getElementsByClassName("dropzone")[0].classList.remove("is-uploading");
-            document.getElementsByClassName("dropzone")[0].classList.add("is-success");
-            window.setTimeout(() => window.location.reload(), 1000);
-          }
-        });
-    }
-  });
-
-  reader.readAsText(file);
-}
-//-------------------------------------------
 export const FileUploader = () => {
+  //-------------------------------------------
+  function onReset(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementsByClassName("dropzone")[0].classList.remove("is-dragover");
+  }
+  //-------------------------------------------
+  function drop(e: DragEvent) {
+    e.preventDefault();
+    document.getElementsByClassName("dropzone")[0].classList.remove("is-dragover");
+    document.getElementsByClassName("dropzone")[0].classList.add("is-uploading");
+
+    if (e.dataTransfer && e.dataTransfer.items) {
+      [...e.dataTransfer.items].forEach((item) => {
+        if (item.kind === "file") {
+          const file = item.getAsFile();
+          if (file) processFile(file);
+        }
+      });
+    } else if (e.dataTransfer && e.dataTransfer.files) {
+      [...e.dataTransfer.files].forEach((file) => {
+        processFile(file);
+      });
+    }
+  }
+  //-------------------------------------------
+  function upload() {
+    const input = document.getElementById("file") as HTMLInputElement;
+    if (input && input.files) {
+      [...input.files].forEach((file) => {
+        if (file.type == "text/csv") {
+          processFile(file);
+        }
+      });
+    }
+  }
+  //-------------------------------------------
+  function processFile(file: Blob) {
+    const reader = new FileReader();
+    reader.addEventListener("load", (ev: ProgressEvent) => {
+
+      const result = (ev.target as FileReader).result;
+      if (result && typeof result === "string") {
+        let cnt = 0;
+        let headers = new Array<string>();
+        const transactions = new Array<ITransaction>();
+        result.split("\r\n").forEach((x) => {
+          if (cnt === 0) {
+            headers = x.split(",");
+          } else {
+            const data = x.replaceAll('"', "").split(",");
+
+            let i = 0;
+            const transaction = {} as Record<string, string | number>;
+            for (const key of headers) {
+              transaction[key] = data[i];
+              i += 1;
+            }
+
+            transaction.amount = parseFloat(transaction.amount.toString());
+
+            let t = new Transaction(transaction);
+            // run the transaction through the Auto-Tag rules generator.
+            t.tag = $store.tag.generateTag(t);
+            if (t.dttm && t.name) transactions.push(t);
+          }
+          cnt += 1;
+        });
+
+        // Now we save the new transactions
+        $store.transaction.saveTransactions(transactions)
+          .then((res) => {
+            if (res === 200) {
+              document.getElementsByClassName("dropzone")[0].classList.remove("is-uploading");
+              document.getElementsByClassName("dropzone")[0].classList.add("is-success");
+              window.setTimeout(() => window.location.reload(), 1000);
+            }
+          });
+      }
+    });
+
+    reader.readAsText(file);
+  }
+  //-------------------------------------------
   return div(
     {
       class: () => (window.FileReader)

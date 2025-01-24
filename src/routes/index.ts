@@ -32,6 +32,11 @@ const routes = [
     meta: { auth: true },
   },
   {
+    path: "/rulebuilder",
+    component: import("./rule-builder"),
+    meta: { auth: true },
+  },
+  {
     path: "/about",
     component: import("./about"),
     meta: {},
