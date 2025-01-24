@@ -95,7 +95,7 @@ export const useDashboardStore = () => {
   //-------------------------------------------
   return {
     slicedTransactions,
-    //transactions,
+    transactions,
     getSlicers,
     getAllTransactions,
     setSlicedTransactions,

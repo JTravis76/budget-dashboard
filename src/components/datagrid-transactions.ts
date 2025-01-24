@@ -22,7 +22,7 @@ import { Transaction } from "../api/schema";
 
 const { div, table, thead, tbody, tfoot, tr, th, td, button, input, select, option, span } = van.tags;
 //---------------------------------------------
-const { tags } = $store.site;
+const { tags } = $store.tag;
 const { transaction } = $store.transaction;
 //---------------------------------------------
 let memoId = van.state(0);

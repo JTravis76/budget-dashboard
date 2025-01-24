@@ -2,16 +2,44 @@ import { transactions } from "../api/data";
 import { Transaction } from "../api/schema";
 import { SearchFilter } from "../models";
 
+const dbName = "db";
+
 async function initDB(): Promise<number> {
   return new Promise((r) => {
-    if (getAll().length === 0) saveChanges(transactions);
+    if (!window.localStorage.getItem(dbName))
+      saveChanges(transactions);
     r(200);
   });
 }
 
 /** save the schema to localstorage */
 function saveChanges(schema = new Array<ITransaction>()) {
-  window.localStorage.setItem("db", JSON.stringify(schema));
+  window.localStorage.setItem(dbName, JSON.stringify(schema));
+}
+
+/** Process a collection of transactions */
+function saveOrUpdate(transactions: ITransaction[]) {
+  transactions.forEach((t) => {
+    if (t.id === 0) create(t);
+    else if (t.id > 0) update(t)
+  });
+  return 200;
+}
+
+/** Update the transaction with either memo or tag */
+function updateMemoTag(id: number, memo: string | null, tag: string | null) {
+  let transaction = new Transaction({ id, memo, tag });
+  if (id > 0) {
+    getAll().forEach((t) => {
+      if (t.id === id) {
+        t.memo = memo;
+        t.tag = tag;
+        update(t);
+        transaction = t;
+      }
+    });
+  }
+  return transaction;
 }
 
 //-------------------------------------------
@@ -42,7 +70,7 @@ function update(transaction: ITransaction) {
 
 /** Read all the transactions */
 function getAll(): ITransaction[] {
-  let all = JSON.parse(window.localStorage.getItem("db") ?? "[]") as ITransaction[];
+  let all = JSON.parse(window.localStorage.getItem(dbName) ?? "[]") as ITransaction[];
   if (all.length > 0) {
     all = all.sort((a, b) => {
       let d1 = new Date(a.dttm ?? "");
@@ -91,7 +119,7 @@ function getFiltered(filtered = new SearchFilter()) {
     result = result.filter((x) => new Date(x.dttm!) >= start);
 
   // == Amount filter ==
-  // TOOD: only returning negative (DEBIT) values, need to include CREDIT
+  // TODO: only returning negative (DEBIT) values, need to include CREDIT
   if (filtered.amount.start && filtered.amount.end) {
     let from = parseFloat(filtered.amount.start) * -1;
     let to = parseFloat(filtered.amount.end) * -1;
@@ -138,6 +166,12 @@ function deleteBy(id: number) {
   saveChanges(transactions);
 }
 
+/** Removes all the records. */
+function deleteAll() {
+  window.localStorage.setItem(dbName, "[]");
+  return 200;
+}
+
 export default {
   initDB,
   getAll,
@@ -146,4 +180,7 @@ export default {
   create,
   update,
   deleteBy,
+  deleteAll,
+  saveOrUpdate,
+  updateMemoTag,
 };

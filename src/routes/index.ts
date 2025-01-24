@@ -4,11 +4,12 @@ import $store from "../stores";
 //-------------------------------------------
 import { Home } from "./home";
 import { Login } from "./login";
+import { NotFound } from "./not-found";
 //-------------------------------------------
 const routes = [
   {
     path: "*",
-    component: import("./not-found"),
+    component: NotFound(),
     meta: {},
   },
   {
@@ -29,6 +30,16 @@ const routes = [
   {
     path: "/transactions",
     component: import("./transactions"),
+    meta: { auth: true },
+  },
+  {
+    path: "/rulebuilder",
+    component: import("./rule-builder"),
+    meta: { auth: true },
+  },
+  {
+    path: "/settings",
+    component: import("./settings"),
     meta: { auth: true },
   },
   {

@@ -19,6 +19,15 @@
 //   height: 32px;
 // }
 
+.rule-bordered:not(:last-child) {
+  border-bottom: 0px solid #e2e2e2;
+}
+@media only screen and (min-width: 769px) {
+  .rule-bordered:not(:last-child) {
+    border-bottom: 1px solid #e2e2e2;
+  }
+}
+
 .mt-1 {
   margin-top: 10px;
 }

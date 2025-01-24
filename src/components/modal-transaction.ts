@@ -25,7 +25,7 @@ import { Transaction } from "../api/schema";
 const { div, label, input, select, option } = van.tags;
 //-------------------------------------------
 const { transaction } = $store.transaction;
-const { tags } = $store.site;
+const { tags } = $store.tag;
 //-------------------------------------------
 emitter.subscribe("action", save);
 //-------------------------------------------

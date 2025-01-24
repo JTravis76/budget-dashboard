@@ -42,6 +42,12 @@ export const LayoutHeader = () => {
             a({ class: "navbar-link" }, "More"),
             div(
               { class: "navbar-dropdown" },
+              () => $store.user.authenticated.val
+                ? a({ class: "navbar-item", href: "./#/rulebuilder" }, "Rule Builder")
+                : "",
+              () => $store.user.authenticated.val
+                ? a({ class: "navbar-item", href: "./#/settings" }, "Settings")
+                : "",
               a({ class: "navbar-item", href: "./#/about" }, "About"),
               hr({ class: "navbar-divider" }),
               a({ class: "navbar-item", href: "./#/issue" }, "Report an issue"),

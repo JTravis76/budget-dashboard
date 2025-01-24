@@ -36,3 +36,10 @@ interface ISlicer {
   //type: SlicerType;
   data: ISlicerData[] | string;
 }
+
+type ITagProperty = Record<string, IRuleProperty>;
+
+interface IRuleProperty {
+  amount: number;
+  tag: string;
+}

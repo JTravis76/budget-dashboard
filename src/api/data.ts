@@ -1,5 +1,6 @@
 export const transactions: ITransaction[] = [
-  { id: 1, dttm: "2024-11-01", transaction: "DEBIT", name: "DEBIT PURCHASE -VISA KROGER #0001    111-555-1234AA", memo: null, amount: -99.91, tag: null },
+  { id: 1, dttm: "11/1/2024", transaction: "DEBIT", name: "DEBIT PURCHASE -VISA KROGER #0001    111-555-1234AA", memo: null, amount: -99.91, tag: null },
+  { id: 2, dttm: "11/4/2024", transaction: "DEBIT", name: "DEBIT PURCHASE -VISA WENDY #1111     740-555-5555OH", memo: null, amount: -29.32, tag: null },
 ];
 
 export const tags = [
