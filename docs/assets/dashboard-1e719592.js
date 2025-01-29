@@ -1,4 +1,4 @@
-import{v as t,I as e,$ as i,g as s,s as n}from"./index-96319300.js";import{e as r}from"./event-emitter-eaaf34fa.js";const{div:o,button:h,span:a,label:c,input:l}=t.tags;
+import{v as t,I as e,$ as i,g as s,s as n}from"./index-383cc3b0.js";import{e as r}from"./event-emitter-eaaf34fa.js";const{div:o,button:h,span:a,label:c,input:l}=t.tags;
 /*!
  * Chart.js v3.9.1
  * https://www.chartjs.org
