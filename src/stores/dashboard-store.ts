@@ -1,7 +1,7 @@
 import van from "vanjs-core";
 import $http from "../api/swagger-client";
 import { Slicer, SlicerData } from "../models";
-import { tags } from "../api/data";
+import { tags } from "../api/services/data";
 import { buildDateList } from "../lib/date";
 
 export const useDashboardStore = () => {

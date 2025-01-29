@@ -1,7 +1,6 @@
 import HttpClient from "../lib/http-client";
 import { sleep } from "../lib/utilities";
-import { tags } from "./data";
-import localDb from "../lib/local-db";
+import svc from "./services/";
 //-------------------------------------------
 const SLEEP_TIMER = 800;
 //-------------------------------------------
@@ -25,17 +24,26 @@ export default {
     get: () => httpClient.get<void>("/aboutserver"),
   },
   transaction: {
-    getById: (id: number) => sleep(SLEEP_TIMER, localDb.getBy(id)),
-    post: (id: number, memo: string | null, tag: string | null) => sleep(SLEEP_TIMER, localDb.updateMemoTag(id, memo, tag)),
-    delete: (id: number) => sleep(SLEEP_TIMER, localDb.deleteBy(id)),
+    getById: (id: number) => sleep(SLEEP_TIMER, svc.transaction.getBy(id)),
+    post: (id: number, memo: string | null, tag: string | null) => sleep(SLEEP_TIMER, svc.transaction.updateMemoTag(id, memo, tag)),
+    delete: (id: number) => sleep(SLEEP_TIMER, svc.transaction.deleteBy(id)),
   },
   transactions: {
-    get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, localDb.getFiltered(filter)),
-    post: (transactions: ITransaction[]) => sleep(SLEEP_TIMER, localDb.saveOrUpdate(transactions)),
-    getAll: () => sleep(SLEEP_TIMER, localDb.getAll()),
-    deleteAll: () => sleep(SLEEP_TIMER, localDb.deleteAll()),
+    get: (filter?: ISearchFilter) => sleep(SLEEP_TIMER, svc.transaction.getFiltered(filter)),
+    post: (transactions: ITransaction[]) => sleep(SLEEP_TIMER, svc.transaction.saveOrUpdate(transactions)),
+    getAll: () => sleep(SLEEP_TIMER, svc.transaction.getAll()),
+    deleteAll: () => sleep(SLEEP_TIMER, svc.transaction.deleteAll()),
+    importTransactions: (transactions: ITransaction[]) => sleep(SLEEP_TIMER, svc.transaction.importTransactions(transactions)),
   },
   tags: {
-    get: () => sleep(SLEEP_TIMER, tags),
+    get: () => sleep(SLEEP_TIMER, svc.tag.getAll()),
+    importTags: (tags: string[]) => sleep(SLEEP_TIMER, svc.tag.importTags(tags)),
+  },
+  rules: {
+    get: () => sleep(SLEEP_TIMER, svc.rule.getAll()),
+    post: (key: string, value: IRuleProperty) => sleep(SLEEP_TIMER, svc.rule.saveOrUpdate(key, value)),
+    deleteBy: (key: string, value: IRuleProperty) => sleep(SLEEP_TIMER, svc.rule.deleteBy(key, value)),
+    deleteAll: () => sleep(SLEEP_TIMER, svc.rule.deleteAll()),
+    importRules: (rules: ITagProperty[]) => sleep(SLEEP_TIMER, svc.rule.importRules(rules))
   },
 };

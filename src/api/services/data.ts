@@ -33,3 +33,17 @@ export const tags = [
   "Transfer",
   "Transfer:Saving",
 ];
+
+export const rules = [
+  {
+    "KROGER FUEL": [
+      { amount: 0, tag: "Shopping" },
+      { amount: 50.00, tag: "Shopping:Fuel" },
+    ]
+  },
+  {
+    "WENDY": [
+      { amount: 0, tag: "Shopping:Dining" },
+    ]
+  }
+];

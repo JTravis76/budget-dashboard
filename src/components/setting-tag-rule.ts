@@ -1,5 +1,6 @@
 import van from "vanjs-core";
 import $store from "../stores";
+import $toast from "../lib/toast";
 
 const { div, h4, p, button, input, label, br } = van.tags;
 
@@ -32,8 +33,11 @@ export const SettingTagRule = () => {
           $store.transaction.saveTransactions(transactions)
             .then((res) => {
               if (res === 200)
-                window.setTimeout(() => window.location.reload(), 1000);
+                $toast({ type: "success", message: "Completed successful." });
             });
+        }
+        else {
+          $toast({ type: "info", message: "No transactions found." });
         }
       }
     });

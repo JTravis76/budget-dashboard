@@ -1,20 +1,17 @@
-import { transactions } from "../api/data";
-import { Transaction } from "../api/schema";
-import { SearchFilter } from "../models";
+import dbcontext from "./local-db";
+import { SearchFilter } from "../../models";
+import { Transaction } from "../schema";
 
-const dbName = "db";
 
-async function initDB(): Promise<number> {
-  return new Promise((r) => {
-    if (!window.localStorage.getItem(dbName))
-      saveChanges(transactions);
-    r(200);
-  });
+function initDB() {
+  if (!dbcontext.transactions.exist())
+    saveChanges([]);
 }
+
 
 /** save the schema to localstorage */
 function saveChanges(schema = new Array<ITransaction>()) {
-  window.localStorage.setItem(dbName, JSON.stringify(schema));
+  dbcontext.transactions.set(schema);
 }
 
 /** Process a collection of transactions */
@@ -40,6 +37,12 @@ function updateMemoTag(id: number, memo: string | null, tag: string | null) {
     });
   }
   return transaction;
+}
+
+function importTransactions(transactions: ITransaction[]) {
+  deleteAll();
+  saveChanges(transactions);
+  return 200;
 }
 
 //-------------------------------------------
@@ -70,7 +73,8 @@ function update(transaction: ITransaction) {
 
 /** Read all the transactions */
 function getAll(): ITransaction[] {
-  let all = JSON.parse(window.localStorage.getItem(dbName) ?? "[]") as ITransaction[];
+  initDB();
+  let all = dbcontext.transactions.get<ITransaction[]>();
   if (all.length > 0) {
     all = all.sort((a, b) => {
       let d1 = new Date(a.dttm ?? "");
@@ -168,19 +172,19 @@ function deleteBy(id: number) {
 
 /** Removes all the records. */
 function deleteAll() {
-  window.localStorage.setItem(dbName, "[]");
+  saveChanges([]);
   return 200;
 }
 
 export default {
-  initDB,
+  create,
+  update,
+  saveOrUpdate,
+  updateMemoTag,
   getAll,
   getBy,
   getFiltered,
-  create,
-  update,
   deleteBy,
   deleteAll,
-  saveOrUpdate,
-  updateMemoTag,
-};
+  importTransactions,
+}

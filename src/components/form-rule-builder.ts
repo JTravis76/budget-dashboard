@@ -9,6 +9,7 @@
  * store.  */
 import van from "vanjs-core";
 import $store from "../stores";
+import $toast from "../lib/toast";
 
 const { div, label, input, select, option, button } = van.tags;
 
@@ -22,7 +23,10 @@ export const FormRuleBuilder = () => {
   let tagSelect = select(
     {
       class: "input",
-      onchange: (e: Event) => value.tag = (e.target as HTMLSelectElement).value
+      onchange: (e: Event) => {
+        value.tag = (e.target as HTMLSelectElement).value;
+        setRule();
+      }
     },
     option({ value: "" }, ""),
   );
@@ -40,6 +44,10 @@ export const FormRuleBuilder = () => {
     van.add(tagSelect, optionList);
   });
   //---------------------------------------------
+  function setRule() {
+    $store.tag.setRule(key, value);
+  }
+  //---------------------------------------------
   function reset() {
     key = "";
     value = { amount: 0, tag: "" };
@@ -47,8 +55,8 @@ export const FormRuleBuilder = () => {
   }
   //---------------------------------------------
   function save() {
-    $store.tag.addRule(key, value)
-      .then((d) => console.log(d)); // TODO: toast message :)
+    $store.tag.saveRule(key, value)
+      .then(() => $toast({ message: "Save successful.", type: "success" }));
   }
   //---------------------------------------------
   return div({ class: "box" },
@@ -64,7 +72,10 @@ export const FormRuleBuilder = () => {
             key = Object.keys(rule.val)[0] ?? "";
             return key;
           }),
-          oninput: (e: Event) => key = (e.target as HTMLInputElement).value
+          oninput: (e: Event) => {
+            key = (e.target as HTMLInputElement).value;
+            setRule();
+          }
         }),
       ),
     ),
@@ -80,7 +91,10 @@ export const FormRuleBuilder = () => {
             let r = Object.values(rule.val)[0] ?? { amount: 0, tag: "" };
             return r.amount.toString();
           }),
-          oninput: (e: Event) => value.amount = parseFloat((e.target as HTMLInputElement).value),
+          oninput: (e: Event) => {
+            value.amount = parseFloat((e.target as HTMLInputElement).value);
+            setRule();
+          },
         }),
       ),
     ),

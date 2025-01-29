@@ -1,6 +1,7 @@
 import van from "vanjs-core";
 import $dialog from "../lib/dialog";
 import $store from "../stores";
+import $toast from "../lib/toast";
 import { Transaction } from "../api/schema";
 
 const { div, h4, p, button, input } = van.tags;
@@ -12,7 +13,13 @@ export const SettingBackupRestore = () => {
     // Read all data from DB and convert to text file for download.
     $store.dashboard.getAllTransactions().then((res) => {
       if (res === 200) {
-        let content = JSON.stringify($store.dashboard.transactions.val);
+        let bkp = {
+          transaction: $store.dashboard.transactions.val,
+          rules: $store.tag.rules.val,
+          tags: $store.tag.tags.val,
+        };
+
+        let content = JSON.stringify(bkp);
         const blob = new Blob([content], { type: "text/plain" });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
@@ -50,26 +57,31 @@ export const SettingBackupRestore = () => {
     reader.addEventListener("load", (ev: ProgressEvent) => {
       const result = (ev.target as FileReader).result;
       if (result && typeof result === "string") {
+
+        let restore = JSON.parse(result) as {
+          transaction: ITransaction[],
+          rules: ITagProperty[],
+          tags: string[],
+        };
+
+        // assuming the parsing is successful
         let transactions = new Array<ITransaction>();
-        (JSON.parse(result) as ITransaction[]).forEach((t) => {
+        restore.transaction.forEach((t) => {
           let transaction = new Transaction(t);
           transaction.id = 0;
           transactions.push(transaction);
         });
-        // assuming the parsing is successful
-        // clear DB 1st to have a clean slate.
-        if (transactions.length > 0) {
-          $store.transaction.resetTansactions().then((res) => {
-            if (res === 200) {
-              $store.transaction.saveTransactions(transactions).then((res) => {
-                if (res === 200) {
-                  // TODO: toast msg
-                  alert("database restored successful.");
-                }
-              });
-            }
-          });
-        }
+
+        if (transactions.length > 0)
+          $store.transaction.importTransactions(transactions);
+
+        if (restore.rules.length > 0)
+          $store.tag.importRules(restore.rules);
+
+        if (restore.tags.length > 0)
+          $store.tag.importTags(restore.tags);
+
+        $toast({ message: "Database restored successful", type: "success" });
       }
     });
     reader.readAsText(file);

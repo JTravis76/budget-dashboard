@@ -19,7 +19,7 @@ export const App = () => {
   $store.user.getUser();
   //-------------------------------------------
   return Await({
-    value: $store.site.preloadData(),
+    value: $store.site.preload(),
     Loading: () => PageLoader(),
     Error: () => "Error"
   },

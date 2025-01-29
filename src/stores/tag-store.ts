@@ -4,8 +4,8 @@ import http from "../api/swagger-client";
 export const useTagStore = () => {
   let loading = van.state(true);
   let tags = van.state(new Array<string>());
-  let rules = van.state([] as Record<string, IRuleProperty[]>[]);
-  let rule = van.state({} as Record<string, IRuleProperty>);
+  let rules = van.state([] as ITagProperty[]);
+  let rule = van.state({ "": { amount: 0, tag: "" } } as Record<string, IRuleProperty>);
   //-------------------------------------------
   async function getTags(): Promise<number> {
     tags.val = new Array<string>();
@@ -15,72 +15,78 @@ export const useTagStore = () => {
     });
   }
   //-------------------------------------------
+  function importTags(tags: string[]) {
+    loading.val = true;
+    window.setTimeout(() => {
+
+      http.tags.importTags(tags)
+        .then((res) => {
+          if (res == 200) {
+            getTags().then(() => loading.val = false)
+          }
+        });
+
+    }, 1000);
+  }
+  //-------------------------------------------
   function resetRule() {
-    rule.val = {};
+    rule.val = { "": { amount: 0, tag: "" } };
   }
   //-------------------------------------------
   function setRule(key: string, value: IRuleProperty) {
-    resetRule();
+    rule.val = {};
     rule.val[key] = value;
   }
   //-------------------------------------------
   function removeRule(key: string, value: IRuleProperty) {
     loading.val = true;
     window.setTimeout(() => {
-      resetRule();
-      for (let i = 0; i < rules.val.length; i++) {
-        let r = rules.val[i];
-        let k = Object.keys(r)[0];
-        let v = Object.values(r)[0];
-        if (k === key) {
-          v.forEach((p, idx) => {
-            // found matching rule property, now remove it
-            if (p.amount == value.amount && p.tag == value.tag) {
-              v.splice(idx, 1);
-            }
-            // If last property is removed, then delete the entire rule
-            if (v.length === 0) {
-              rules.val.splice(i, 1);
-            }
-          });
 
-          break;
-        }
-      }
+      http.rules.deleteBy(key, value)
+        .then((res) => {
+          if (res == 200) {
+            resetRule();
+            getRules().then(() => loading.val = false)
+          }
+        });
 
-      loading.val = false;
+    }, 1000);
+  }
+  //-------------------------------------------
+  function importRules(rules: ITagProperty[]) {
+    loading.val = true;
+    window.setTimeout(() => {
+
+      http.rules.importRules(rules)
+        .then((res) => {
+          if (res == 200) {
+            resetRule();
+            getRules().then(() => loading.val = false)
+          }
+        });
+
     }, 1000);
   }
   //-------------------------------------------
   async function getRules(): Promise<number> {
-    rules.val = [] as Record<string, IRuleProperty[]>[];
+    rules.val = [];
     return new Promise(async (r) => {
-      //TODO: using mock data, needs replaced
-      rules.val.push({
-        "Gas Station": [
-          { amount: 0, tag: "Shopping" },
-          { amount: 50.00, tag: "Shopping:Fuel" },
-        ]
-      });
-      rules.val.push({
-        "Wendy": [
-          { amount: 0, tag: "Shopping:Dining" },
-        ]
-      });
+      rules.val = await http.rules.get();
       r(200);
     });
   }
   //-------------------------------------------
-  async function addRule(key: string, value: IRuleProperty): Promise<number> {
+  async function saveRule(key: string, value: IRuleProperty): Promise<number> {
     loading.val = true;
     return new Promise((r) => {
       window.setTimeout(() => {
-        let tagProp = {} as Record<string, IRuleProperty[]>;
-        tagProp[key] = [value];
-        rules.val.push(tagProp);
-        resetRule();
-        loading.val = false;
-        r(200);
+        http.rules.post(key, value)
+          .then(() => {
+            resetRule();
+            getRules();
+            loading.val = false;
+            r(200);
+          });
       }, 1000);
     });
   }
@@ -115,11 +121,13 @@ export const useTagStore = () => {
     rules,
     rule,
     getTags,
+    importTags,
     getRules,
     setRule,
     removeRule,
+    importRules,
     resetRule,
-    addRule,
+    saveRule,
     generateTag,
   };
 }

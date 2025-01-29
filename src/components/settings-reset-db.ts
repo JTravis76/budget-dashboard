@@ -1,6 +1,7 @@
 import van from "vanjs-core";
 import $dialog from "../lib/dialog";
 import $store from "../stores";
+import $toast from "../lib/toast";
 
 const { div, h4, p, button } = van.tags;
 
@@ -25,7 +26,7 @@ export const SettingResetDb = () => {
               }).then((res) => {
                 if (res) {
                   $store.transaction.resetTansactions()
-                    .then((d) => console.log(d));
+                    .then(() => $toast({ type: "success", message: "Database reset successful." }));
                 }
               });
             }

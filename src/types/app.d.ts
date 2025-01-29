@@ -37,7 +37,7 @@ interface ISlicer {
   data: ISlicerData[] | string;
 }
 
-type ITagProperty = Record<string, IRuleProperty>;
+type ITagProperty = Record<string, IRuleProperty[]>;
 
 interface IRuleProperty {
   amount: number;

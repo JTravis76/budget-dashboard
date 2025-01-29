@@ -38,6 +38,10 @@ export const useTransactionStore = () => {
     return await http.transactions.deleteAll();
   }
   //-------------------------------------------
+  function importTransactions(transactions: ITransaction[]) {
+    http.transactions.importTransactions(transactions);
+  }
+  //-------------------------------------------
   return {
     transaction,
     getTransactions,
@@ -46,5 +50,6 @@ export const useTransactionStore = () => {
     saveTransactions,
     removeTransaction,
     resetTansactions,
+    importTransactions,
   };
 }

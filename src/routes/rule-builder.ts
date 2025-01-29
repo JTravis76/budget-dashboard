@@ -9,6 +9,7 @@
  * Removing a rule is first asking for confirmation. */
 import van from "vanjs-core";
 import { FormRuleBuilder } from "../components/form-rule-builder";
+import { IconEdit, IconRemove } from "../components/icons";
 import $store from "../stores";
 import $dialog from "../lib/dialog";
 
@@ -52,13 +53,15 @@ export const RuleBuilder = async () => {
                       button(
                         {
                           class: "button is-small is-default",
-                          onclick: () => $store.tag.setRule(name, d)
-                        }, "Edit"),
+                          onclick: () => $store.tag.setRule(name, d),
+                          title: "Edit"
+                        }, IconEdit()),
                       button(
                         {
-                          class: "button is-small is-default",
-                          onclick: () => remove(name, d)
-                        }, "Remove"),
+                          class: "button is-small is-outlined is-danger",
+                          onclick: () => remove(name, d),
+                          title: "Remove",
+                        }, IconRemove()),
                     )
                   )
                 )
