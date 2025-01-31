@@ -1,37 +1,30 @@
 import van from "vanjs-core";
+import $cookie from "../lib/cookie-manager";
 
 export const useUserStore = () => {
   let authenticated = van.state(false);
   //-------------------------------------------
   async function login(username: string, password: string) {
-    let encoded = window.btoa(`${username}:${password}`);
-    // console.log(encoded);
-
     return new Promise((r) => {
-      if (encoded === "Og==") {
-        let d = new Date();
-        let m = d.getMinutes() + 15;
-        d.setMinutes(m);
-        document.cookie = `expires=${new Date(d).toUTCString()};`;
-      }
+      let encoded = window.btoa(`${username}:${password}`);
+      if (encoded === "Og==") $cookie.setExpire();
       r(200);
     });
   }
   //-------------------------------------------
   async function signout() {
     return new Promise((r) => {
-      // You can delete a cookie by updating its expiration time to zero.
-      document.cookie = `expires=0;`;
+      $cookie.remove();
       r(200);
     });
   }
   //-------------------------------------------
   async function getUser() {
     return new Promise((r) => {
-      let arr = document.cookie.split("=");
+      let arr = $cookie.get().split("=");
       // check if expired
       authenticated.val = (new Date() <= new Date(arr[1]));
-      // TODO: with every call, if user is auth then increase the expire date
+      if (authenticated.val) $cookie.setExpire();
       r(200);
     });
   }

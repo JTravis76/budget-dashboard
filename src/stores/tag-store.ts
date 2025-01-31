@@ -53,6 +53,13 @@ export const useTagStore = () => {
     }, 1000);
   }
   //-------------------------------------------
+  async function resetAll() {
+    return Promise.all([
+      http.rules.deleteAll(),
+      http.tags.deleteAll()
+    ]).then(() => 200);
+  }
+  //-------------------------------------------
   function importRules(rules: ITagProperty[]) {
     loading.val = true;
     window.setTimeout(() => {
@@ -105,7 +112,7 @@ export const useTagStore = () => {
         Object.values(rule)[0]
           .sort((a, b) => a.amount < b.amount ? 1 : -1)
           .forEach((property) => {
-            if (tag === "" && Math.abs(trans.amount) > property.amount)
+            if (tag === "" && Math.abs(trans.amount) >= property.amount)
               tag = property.tag;
           });
 
@@ -129,5 +136,6 @@ export const useTagStore = () => {
     resetRule,
     saveRule,
     generateTag,
+    resetAll,
   };
 }

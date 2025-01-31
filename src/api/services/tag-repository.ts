@@ -37,4 +37,5 @@ function deleteAll() {
 export default {
   getAll,
   importTags,
+  deleteAll,
 }

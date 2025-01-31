@@ -14,79 +14,76 @@
 import van from "vanjs-core";
 import { ModalTransaction } from "./modal-transaction";
 import { ModalImport } from "./modal-import";
-import { IconEdit, IconRemove } from "./icons";
+import { ModalRuleBuilder } from "./modal-rule-builder";
+import { MiniMenu } from "./mini-menu";
 import $modal from "../lib/modal";
 import $dialog from "../lib/dialog";
 import $store from "../stores";
 import { Transaction } from "../api/schema";
+import emitter from "../lib/event-emitter";
 
 const { div, table, thead, tbody, tfoot, tr, th, td, button, input, select, option, span } = van.tags;
-//---------------------------------------------
-const { tags } = $store.tag;
-const { transaction } = $store.transaction;
-//---------------------------------------------
-let memoId = van.state(0);
-let tagId = van.state(0);
-let total = van.state(0.0);
-//---------------------------------------------
-async function edit(id: number) {
-  transaction.val = new Transaction();
-  if (id > 0) {
-    // Note: we could do the same as the edit Memo/Tag function.
-    // But wanted to fetch from server versus copy data from data-row.
-    await $store.transaction.getTransactionById(id);
-  }
-  $modal.open("TransactionModal");
-};
-//---------------------------------------------
-function remove(id: number) {
-  if (id > 0) {
-    $dialog({
-      title: "Confirm",
-      message: "Are you sure you want to remove this transaction?",
-      type: "yesno",
-    }).then((res) => {
-      if (res) {
-        $store.transaction.removeTransaction(id)
-          .then(() => {
-            window.location.reload();
-          });
-      }
-    });
-  }
-};
-//-------------------------------------------
-function save() {
-  $store.transaction.saveTransaction()
-    .then(() => {
-      memoId.val = 0;
-    });
-}
+
 //-------------------------------------------
 export const DatagridTransactions = (props: { transactions: ITransaction[] }) => {
+  const { tags } = $store.tag;
+  const { transaction } = $store.transaction;
+  //---------------------------------------------
+  let memoId = van.state(0);
+  let tagId = van.state(0);
+  let total = van.state(0.0);
+  //-------------------------------------------
+  emitter.subscribe("edit", (id: number) => edit(id));
+  emitter.subscribe("remove", (id: number) => remove(id));
+  emitter.subscribe("tag", (id: number) => {
+    // Open modal with Rule Builder form
+    // and pre-fill the name & amount from transaction
+    let t = props.transactions.find((x) => x.id == id) ?? new Transaction();
+    $store.tag.setRule(t.name, { amount: Math.abs(t.amount), tag: "" });
+    $modal.open("RuleBuilderModal");
+  });
+  //-------------------------------------------
   total.val = 0.0;
-
+  //-------------------------------------------
+  async function edit(id: number) {
+    transaction.val = new Transaction();
+    if (id > 0) {
+      // Note: we could do the same as the edit Memo/Tag function.
+      // But wanted to fetch from server versus copy data from data-row.
+      await $store.transaction.getTransactionById(id);
+    }
+    $modal.open("TransactionModal");
+  };
+  //---------------------------------------------
+  function remove(id: number) {
+    if (id > 0) {
+      $dialog({
+        title: "Confirm",
+        message: "Are you sure you want to remove this transaction?",
+        type: "yesno",
+      }).then((res) => {
+        if (res) {
+          $store.transaction.removeTransaction(id)
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
+    }
+  };
+  //-------------------------------------------
+  function save() {
+    $store.transaction.saveTransaction()
+      .then(() => {
+        memoId.val = 0;
+      });
+  }
+  //-------------------------------------------
   const rows = new Array<HTMLTableRowElement>();
   props.transactions.forEach((r) => {
     total.val = total.val + parseFloat(r.amount.toString());
     rows.push(
       tr(
-        td(
-          div({ class: "buttons" },
-            button({
-              class: "button is-primary is-small is-outlined",
-              onclick: () => edit(r.id),
-            },
-              IconEdit({ width: "16", height: "16" }),
-            ),
-            button({
-              class: "button is-danger is-small is-outlined",
-              onclick: () => remove(r.id),
-            },
-              IconRemove({ width: "16", height: "16" }),
-            ),
-          ),
-        ),
         td(
           div({ class: "text-nowrap" }, r.dttm),
         ),
@@ -98,7 +95,9 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
           () => memoId.val != r.id
             ? button(
               {
-                class: "button is-small",
+                class: "button is-small text-ellipsis",
+                style: "max-width:130px;display:block",
+                title: r.memo,
                 onclick: () => {
                   transaction.val = r;
                   memoId.val = r.id;
@@ -152,56 +151,75 @@ export const DatagridTransactions = (props: { transactions: ITransaction[] }) =>
               tags.val.map((tag) => option({ value: tag, selected: r.tag === tag }, tag))
             )
         ),
+        td(
+          MiniMenu({ id: r.id }),
+          // div({ class: "buttons" },
+          //   button({
+          //     class: "button is-primary is-small is-outlined",
+          //     onclick: () => edit(r.id),
+          //   },
+          //     IconEdit({ width: "16", height: "16" }),
+          //   ),
+          //   button({
+          //     class: "button is-danger is-small is-outlined",
+          //     onclick: () => remove(r.id),
+          //   },
+          //     IconRemove({ width: "16", height: "16" }),
+          //   ),
+          // ),
+        ),
       ),
     );
   });
   //-------------------------------------------
-  return div(
-    { class: "columns" },
+  return div({},
     div(
       { class: "column" },
-      table(
-        { class: "table is-striped is-narrow is-fullwidth is-hoverable" },
-        thead(
-          tr(
-            th(
-              // button({
-              //   class: "button is-secondary is-small",
-              //   onclick: () => edit(0),
-              // }, "add"),
-              button({
-                class: "button is-secondary is-small",
-                onclick: () => $modal.open("ImportModal"),
-              }, "Import"),
-            ),
-            th("Date"),
-            th("Transaction"),
-            th("Name"),
-            th("Memo"),
-            th("Amount"),
-            th("Tag"),
-          ),
-        ),
-        () => {
-          if (props.transactions.length === 0) {
-            return tbody(tr(td({ colSpan: 7 }, "No records found.")));
-          }
-          return tbody(rows);
-        },
-        tfoot(
-          tr(
-            td({ colSpan: 5 }, ""),
-            td({ colSpan: 2 },
-              span(
-                { class: "has-text-weight-bold" },
-                "$", Math.abs(total.val).toFixed(2)
+      div({ class: "table-container" },
+        table(
+          { class: "table is-striped is-narrow is-fullwidth is-hoverable" },
+          thead(
+            tr(
+              th("Date"),
+              th("Transaction"),
+              th("Name"),
+              th("Memo"),
+              th("Amount"),
+              th("Tag"),
+              th(
+                // button({
+                //   class: "button is-secondary is-small",
+                //   onclick: () => edit(0),
+                // }, "add"),
+                button({
+                  class: "button is-secondary is-small",
+                  onclick: () => $modal.open("ImportModal"),
+                }, "Import"),
               ),
             ),
           ),
-        )
+          () => {
+            if (props.transactions.length === 0) {
+              return tbody(tr(td({ colSpan: 8 }, "No records found.")));
+            }
+            return tbody(rows);
+          },
+          tfoot(
+            tr(
+              td({ colSpan: 4 }, ""),
+              td({ colSpan: 3 },
+                span(
+                  { class: "has-text-weight-bold" },
+                  "$", Math.abs(total.val).toFixed(2)
+                ),
+              ),
+            ),
+          )
+        ),
       ),
     ),
     ModalTransaction(),
     ModalImport(),
+    ModalRuleBuilder(),
   );
 }

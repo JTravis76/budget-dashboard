@@ -1,14 +1,17 @@
 import van from "vanjs-core";
 import $store from "../stores";
 import $toast from "../lib/toast";
+import { IconThreeDotsLoading } from "./icons";
 
 const { div, h4, p, button, input, label, br } = van.tags;
 
 export const SettingTagRule = () => {
+  let loading = van.state(false);
   let runType = van.state(0);
   let style = "border-left: 2px solid; padding-left: 10px;";
   //---------------------------------------------
   function ruleRules() {
+    loading.val = true;
     //fetch all rules & transactions and generate a tag
     $store.dashboard.getAllTransactions().then((res) => {
       if (res === 200) {
@@ -32,11 +35,14 @@ export const SettingTagRule = () => {
         if (transactions.length > 0) {
           $store.transaction.saveTransactions(transactions)
             .then((res) => {
-              if (res === 200)
+              if (res === 200) {
+                loading.val = false;
                 $toast({ type: "success", message: "Completed successful." });
+              }
             });
         }
         else {
+          loading.val = false;
           $toast({ type: "info", message: "No transactions found." });
         }
       }
@@ -75,7 +81,14 @@ export const SettingTagRule = () => {
             "All records"
           )
         ),
-        button({ class: "button is-default", onclick: () => ruleRules() }, "Run Rules"),
+        button(
+          {
+            class: "button",
+            disabled: () => loading.val,
+            onclick: () => ruleRules()
+          },
+          () => loading.val ? IconThreeDotsLoading() : "Run Rules",
+        ),
       ),
     ),
   );

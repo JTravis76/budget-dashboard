@@ -37,6 +37,7 @@ export const RuleBuilder = async () => {
     () => loading.val
       ? div({ class: "skeleton-block" })
       : div({ class: "box" },
+        strong(() => rules.val.length == 0 ? "No rules found." : ""),
         rules.val.map((r) => {
           const name = Object.keys(r)[0];
           const defs = Object.values(r)[0]?.sort((a, b) => a.amount < b.amount ? 1 : -1);
@@ -46,13 +47,13 @@ export const RuleBuilder = async () => {
             div({ class: "column" },
               defs.map((d) =>
                 div({ class: "columns" },
-                  div({ class: "column" }, `$${d.amount.toFixed(2)}`),
+                  div({ class: "column" }, `$${d.amount?.toFixed(2)}`),
                   div({ class: "column" }, d.tag),
                   div({ class: "column" },
                     div({ class: "buttons" },
                       button(
                         {
-                          class: "button is-small is-default",
+                          class: "button is-small is-outlined is-primary",
                           onclick: () => $store.tag.setRule(name, d),
                           title: "Edit"
                         }, IconEdit()),

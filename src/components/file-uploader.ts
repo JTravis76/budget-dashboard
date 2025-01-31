@@ -57,7 +57,7 @@ export const FileUploader = () => {
         let cnt = 0;
         let headers = new Array<string>();
         const transactions = new Array<ITransaction>();
-        result.split("\r\n").forEach((x) => {
+        result.split("\n").forEach((x) => {
           if (cnt === 0) {
             headers = x.split(",");
           } else {
@@ -70,11 +70,11 @@ export const FileUploader = () => {
               i += 1;
             }
 
-            transaction.amount = parseFloat(transaction.amount.toString());
+            transaction.amount = parseFloat(transaction.amount?.toString());
 
             let t = new Transaction(transaction);
             // run the transaction through the Auto-Tag rules generator.
-            t.tag = $store.tag.generateTag(t);
+            //t.tag = $store.tag.generateTag(t);
             if (t.dttm && t.name) transactions.push(t);
           }
           cnt += 1;

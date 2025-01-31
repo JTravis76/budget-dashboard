@@ -38,6 +38,7 @@ export default {
   tags: {
     get: () => sleep(SLEEP_TIMER, svc.tag.getAll()),
     importTags: (tags: string[]) => sleep(SLEEP_TIMER, svc.tag.importTags(tags)),
+    deleteAll: () => sleep(SLEEP_TIMER, svc.tag.deleteAll()),
   },
   rules: {
     get: () => sleep(SLEEP_TIMER, svc.rule.getAll()),

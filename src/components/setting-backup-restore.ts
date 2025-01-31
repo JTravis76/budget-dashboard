@@ -3,13 +3,18 @@ import $dialog from "../lib/dialog";
 import $store from "../stores";
 import $toast from "../lib/toast";
 import { Transaction } from "../api/schema";
+import { IconThreeDotsLoading } from "./icons";
 
 const { div, h4, p, button, input } = van.tags;
 
 export const SettingBackupRestore = () => {
+  let loadingBackup = van.state(false);
+  let loadingRestore = van.state(false);
+  //---------------------------------------------
   let style = "border-left: 2px solid; padding-left: 10px;";
   //---------------------------------------------
   function backup() {
+    loadingBackup.val = true;
     // Read all data from DB and convert to text file for download.
     $store.dashboard.getAllTransactions().then((res) => {
       if (res === 200) {
@@ -23,9 +28,9 @@ export const SettingBackupRestore = () => {
         const blob = new Blob([content], { type: "text/plain" });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        let d = new Date();
-        link.download = `budget-backup_${d.getFullYear()}-${d.getMonth() + 1}.json`;
+        link.download = `budget-backup_${new Date().toISOString()}.json`;
         link.click();
+        loadingBackup.val = false;
       }
     });
   }
@@ -57,6 +62,7 @@ export const SettingBackupRestore = () => {
     reader.addEventListener("load", (ev: ProgressEvent) => {
       const result = (ev.target as FileReader).result;
       if (result && typeof result === "string") {
+        loadingRestore.val = true;
 
         let restore = JSON.parse(result) as {
           transaction: ITransaction[],
@@ -81,6 +87,7 @@ export const SettingBackupRestore = () => {
         if (restore.tags.length > 0)
           $store.tag.importTags(restore.tags);
 
+        loadingRestore.val = false;
         $toast({ message: "Database restored successful", type: "success" });
       }
     });
@@ -94,9 +101,23 @@ export const SettingBackupRestore = () => {
     div({ class: "column" },
       div({ style },
         p("Export the entire database to create a backup."),
-        button({ class: "button is-default", onclick: () => backup() }, "Backup"),
+        button(
+          {
+            class: "button is-default",
+            disabled: () => loadingBackup.val,
+            onclick: () => backup(),
+          },
+          () => loadingBackup.val ? IconThreeDotsLoading() : "Backup"
+        ),
         p("Restore database from a backup."),
-        button({ class: "button is-default", onclick: () => restore() }, "Restore"),
+        button(
+          {
+            class: "button is-default",
+            disabled: () => loadingRestore.val,
+            onclick: () => restore(),
+          },
+          () => loadingRestore.val ? IconThreeDotsLoading() : "Restore"
+        ),
         input({
           type: "file",
           name: "files[]",

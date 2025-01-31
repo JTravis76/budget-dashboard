@@ -76,7 +76,12 @@ function update(key: string, value: IRuleProperty, rule: IRuleProperty) {
 
 function getAll() {
   initDB();
-  return dbcontext.rules.get<ITagProperty[]>();
+  return dbcontext.rules.get<ITagProperty[]>()
+    .sort((a, b) => {
+      let k1 = Object.keys(a)[0];
+      let k2 = Object.keys(b)[0];
+      return k1 > k2 ? 1 : -1;
+    });
 }
 
 /** Remove a rule */

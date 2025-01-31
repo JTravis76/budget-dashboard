@@ -2,10 +2,13 @@ import van from "vanjs-core";
 import $dialog from "../lib/dialog";
 import $store from "../stores";
 import $toast from "../lib/toast";
+import { IconThreeDotsLoading } from "./icons";
 
 const { div, h4, p, button } = van.tags;
 
 export const SettingResetDb = () => {
+  let loading = van.state(false);
+  //---------------------------------------------
   let style = "border-left: 2px solid; padding-left: 10px;";
   //---------------------------------------------
   return div({ class: "columns" },
@@ -18,6 +21,7 @@ export const SettingResetDb = () => {
         button(
           {
             class: "button is-danger",
+            disabled: () => loading.val,
             onclick: () => {
               $dialog({
                 title: "Reset confirmation?",
@@ -25,12 +29,21 @@ export const SettingResetDb = () => {
                 type: "yesno",
               }).then((res) => {
                 if (res) {
-                  $store.transaction.resetTansactions()
-                    .then(() => $toast({ type: "success", message: "Database reset successful." }));
+                  loading.val = true;
+                  Promise.all([
+                    $store.transaction.resetTansactions(),
+                    $store.tag.resetAll(),
+                  ]).then(() => {
+                    loading.val = false;
+                    $toast({ type: "success", message: "Database reset successful." });
+                  });
+
                 }
               });
             }
-          }, "Reset"),
+          },
+          () => loading.val ? IconThreeDotsLoading() : "Reset",
+        ),
       ),
     ),
 

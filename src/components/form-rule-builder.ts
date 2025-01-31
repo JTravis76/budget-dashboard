@@ -10,11 +10,14 @@
 import van from "vanjs-core";
 import $store from "../stores";
 import $toast from "../lib/toast";
+import $modal from "../lib/modal";
+import { IconThreeDotsLoading } from "./icons";
 
 const { div, label, input, select, option, button } = van.tags;
 
 export const FormRuleBuilder = () => {
   //---------------------------------------------
+  let loading = van.state(false);
   const { tags, rule } = $store.tag;
   //---------------------------------------------
   let key = "";
@@ -55,8 +58,14 @@ export const FormRuleBuilder = () => {
   }
   //---------------------------------------------
   function save() {
+    loading.val = true;
+    if (!value.amount) value.amount = 0;
     $store.tag.saveRule(key, value)
-      .then(() => $toast({ message: "Save successful.", type: "success" }));
+      .then(() => {
+        loading.val = false;
+        $modal.close("RuleBuilderModal");
+        $toast({ message: "Save successful.", type: "success" })
+      });
   }
   //---------------------------------------------
   return div({ class: "box" },
@@ -109,8 +118,11 @@ export const FormRuleBuilder = () => {
       button({
         class: "button is-primary",
         type: "button",
+        disabled: () => loading.val,
         onclick: () => save()
-      }, "Save"),
+      },
+        () => loading.val ? IconThreeDotsLoading() : "Save"
+      ),
       button({
         class: "button is-secondary",
         type: "reset",
