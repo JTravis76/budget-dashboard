@@ -57,9 +57,9 @@ export const FileUploader = () => {
         let cnt = 0;
         let headers = new Array<string>();
         const transactions = new Array<ITransaction>();
-        result.split("\n").forEach((x) => {
+        result.replaceAll("\r", "").split("\n").forEach((x) => {
           if (cnt === 0) {
-            headers = x.split(",");
+            headers = x.replaceAll('"', "").replace('Date', 'dttm').toLowerCase().split(",");
           } else {
             const data = x.replaceAll('"', "").split(",");
 
