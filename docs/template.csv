@@ -1,2 +1,2 @@
-dttm,transaction,name,memo,amount,tag
-"11/1/2024","DEBIT","DEBIT PURCHASE -VISA KROGER #0001    111-555-1234AA",,-99.91
+"Date","Transaction","Name","Memo","Amount"
+"2025-01-01","DEBIT","DEBIT PURCHASE -VISA WENDY'S #0001 ANYTOWN USA","Download from bank","-7.85"
