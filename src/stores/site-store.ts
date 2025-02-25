@@ -11,5 +11,6 @@ export const useSiteStore = () => {
   //-------------------------------------------
   return {
     preload,
+    version: "1.0.0"
   };
 }

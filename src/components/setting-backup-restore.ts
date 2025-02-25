@@ -5,9 +5,9 @@ import $toast from "../lib/toast";
 import { Transaction } from "../api/schema";
 import { IconThreeDotsLoading } from "./icons";
 
-const { div, h4, p, button, input } = van.tags;
-
 export const SettingBackupRestore = () => {
+  const { div, h4, p, button, input } = van.tags;
+  //---------------------------------------------
   let loadingBackup = van.state(false);
   let loadingRestore = van.state(false);
   //---------------------------------------------

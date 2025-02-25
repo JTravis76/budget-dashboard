@@ -13,9 +13,9 @@ import { IconEdit, IconRemove } from "../components/icons";
 import $store from "../stores";
 import $dialog from "../lib/dialog";
 
-const { div, strong, button } = van.tags;
-
 export const RuleBuilder = async () => {
+  const { div, strong, button } = van.tags;
+  //---------------------------------------------
   await $store.tag.getRules();
   //---------------------------------------------
   let { rules, loading } = $store.tag;
@@ -36,7 +36,7 @@ export const RuleBuilder = async () => {
     FormRuleBuilder(),
     () => loading.val
       ? div({ class: "skeleton-block" })
-      : div({ class: "box" },
+      : div({ class: "box", style: "max-height:400px; overflow-x: auto" },
         strong(() => rules.val.length == 0 ? "No rules found." : ""),
         rules.val.map((r) => {
           const name = Object.keys(r)[0];

@@ -1,9 +1,9 @@
 import van from "vanjs-core";
 import $store from "../stores";
 
-const { header, nav, div, a, span, hr, strong } = van.tags;
-
 export const LayoutHeader = () => {
+  const { header, nav, div, a, span, hr, strong } = van.tags;
+  //-------------------------------------------
   let expanded = van.state(false);
   return header(
     { class: "" },

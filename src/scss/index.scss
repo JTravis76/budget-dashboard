@@ -5,6 +5,7 @@
 @import "./data-slicer";
 @import "./animation";
 @import "./toast-notification";
+@import "./toggle-switch";
 
 // input {
 //   border: 1px solid lightgray;
@@ -22,13 +23,13 @@
 // }
 
 .rule-bordered:not(:last-child) {
-  border-bottom: 0px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
 }
-@media only screen and (min-width: 769px) {
-  .rule-bordered:not(:last-child) {
-    border-bottom: 1px solid #e2e2e2;
-  }
-}
+// @media only screen and (min-width: 769px) {
+//   .rule-bordered:not(:last-child) {
+//     border-bottom: 1px solid #e2e2e2;
+//   }
+// }
 
 .mini-menu {
   background: white;
@@ -98,6 +99,10 @@ aside.sidebar-left {
   background-color: cyan;
   overflow-x: hidden;
   color: white;
+}
+
+.footer-padding {
+  height: 180px;
 }
 
 footer {

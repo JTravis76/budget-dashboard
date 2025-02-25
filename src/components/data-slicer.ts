@@ -7,9 +7,9 @@ import van from "vanjs-core";
 import emitter from "../lib/event-emitter";
 import { IconEraser } from "./icons";
 
-const { div, button, span, label, input } = van.tags;
-//---------------------------------------------
 export const DataSlicer = (props: ISlicer) => {
+  const { div, button, span, label, input } = van.tags;
+  //--------------------------------------------- 
   let active = van.state(props.active);
   let collapse = van.state(props.collapse);
   //---------------------------------------------

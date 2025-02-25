@@ -8,9 +8,8 @@ import { IconDownload } from "./icons";
 import $store from "../stores";
 import { Transaction } from "../api/schema";
 
-const { div, input, label, span, strong } = van.tags
-
 export const FileUploader = () => {
+  const { div, input, label, span, strong } = van.tags
   //-------------------------------------------
   function onReset(e: DragEvent) {
     e.preventDefault();

@@ -22,44 +22,44 @@ import emitter from "../lib/event-emitter";
 import $store from "../stores";
 import { Transaction } from "../api/schema";
 
-const { div, label, input, select, option } = van.tags;
-//-------------------------------------------
-const { transaction } = $store.transaction;
-const { tags } = $store.tag;
-//-------------------------------------------
-emitter.subscribe("action", save);
-//-------------------------------------------
-function save() {
-  $store.transaction.saveTransaction()
-    .then(() => {
-      $modal.close("TransactionModal");
-      transaction.val = new Transaction();
-    });
-};
-//-------------------------------------------
-let tagSelect = select(
-  {
-    class: "input",
-    onchange: (e: Event) => transaction.val.tag = (e.target as HTMLSelectElement).value
-  },
-  option({ value: "" }, ""),
-);
-
-van.derive(() => {
-  let optionList = new Array<HTMLOptionElement>();
-  optionList = tags.val.map(
-    (tag) => option(
-      {
-        value: tag,
-        selected: () => transaction.val.tag === tag,
-      },
-      tag,
-    ),
-  );
-  van.add(tagSelect, optionList);
-});
-//-------------------------------------------
 export const ModalTransaction = () => {
+  const { div, label, input, select, option } = van.tags;
+  //-------------------------------------------
+  const { transaction } = $store.transaction;
+  const { tags } = $store.tag;
+  //-------------------------------------------
+  emitter.subscribe("action", save);
+  //-------------------------------------------
+  function save() {
+    $store.transaction.saveTransaction()
+      .then(() => {
+        $modal.close("TransactionModal");
+        transaction.val = new Transaction();
+      });
+  };
+  //-------------------------------------------
+  let tagSelect = select(
+    {
+      class: "input",
+      onchange: (e: Event) => transaction.val.tag = (e.target as HTMLSelectElement).value
+    },
+    option({ value: "" }, ""),
+  );
+
+  van.derive(() => {
+    let optionList = new Array<HTMLOptionElement>();
+    optionList = tags.val.map(
+      (tag) => option(
+        {
+          value: tag,
+          selected: () => transaction.val.tag === tag,
+        },
+        tag,
+      ),
+    );
+    van.add(tagSelect, optionList);
+  });
+  //-------------------------------------------
   return ModalFrame(
     { id: "TransactionModal", title: "Transaction Properties", footer: true },
     div(

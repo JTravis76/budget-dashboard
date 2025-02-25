@@ -10,8 +10,6 @@ import van from "vanjs-core";
 import $modal from "../lib/modal";
 import emitter from "../lib/event-emitter";
 
-const { div, header, p, section, footer, button } = van.tags;
-//-------------------------------------------
 interface IProp {
   id: string;
   title: string;
@@ -19,6 +17,8 @@ interface IProp {
 }
 //-------------------------------------------
 export const ModalFrame = (props: IProp, slot: Element) => {
+  const { div, header, p, section, footer, button } = van.tags;
+  //-------------------------------------------
   const close = () => $modal.close(props.id);
   //-------------------------------------------
   return div(

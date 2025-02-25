@@ -1,7 +1,5 @@
 import van from "vanjs-core";
 
-const { div, p } = van.tags;
-
 type ToastType = "success" | "error" | "default" | "info" | "warning";
 type ToastPosition = "top" | "bottom" | "top-right" | "bottom-right" | "top-left" | "bottom-left";
 
@@ -14,6 +12,8 @@ interface IProps {
 }
 
 export default (props: IProps) => {
+  const { div, p } = van.tags;
+
   let opt = {
     type: "default",
     position: "top",

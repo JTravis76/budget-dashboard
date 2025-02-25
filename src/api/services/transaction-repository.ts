@@ -106,7 +106,8 @@ function getFiltered(filtered = new SearchFilter()) {
   // == Tag filter ==
   if (filtered.tag) {
     let tag = filtered.tag;
-    result = result.filter((x) => x.tag == tag);
+    if (tag === "BLANK") result = result.filter((x) => x.tag == null || x.tag == undefined || x.tag == "")
+    else result = result.filter((x) => x.tag == tag);
   }
 
   // == Date filter ==

@@ -2,11 +2,11 @@ import van from "vanjs-core";
 import { IconEllipsisV, IconEdit, IconNewFolder, IconTrash } from "./icons";
 import emitter from "../lib/event-emitter";
 
-const { div, button, a, hr } = van.tags;
-
 export const MiniMenu = (props: { id: number }) => {
+  const { div, button, a, hr } = van.tags;
+  //-------------------------------------------
   let active = van.state(false);
-
+  //-------------------------------------------
   return div(
     button({
       type: "button", onclick: () => {

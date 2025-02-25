@@ -47,4 +47,9 @@ export default {
     deleteAll: () => sleep(SLEEP_TIMER, svc.rule.deleteAll()),
     importRules: (rules: ITagProperty[]) => sleep(SLEEP_TIMER, svc.rule.importRules(rules))
   },
+  user: {
+    authenticate: (email: string, password: string) => sleep(SLEEP_TIMER, svc.user.authenticate(email, password)),
+    get: (email: string) => sleep(SLEEP_TIMER, svc.user.getUser(email)),
+    post: (user: IUser) => sleep(SLEEP_TIMER, svc.user.saveOrUpdate(user)),
+  }
 };

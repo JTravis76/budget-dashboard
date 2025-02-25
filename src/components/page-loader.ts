@@ -1,8 +1,8 @@
 import van from "vanjs-core";
 
-const { div } = van.tags;
-
 export const PageLoader = () => {
+  const { div } = van.tags;
+  //-------------------------------------------
   return div(
     { class: "loading-bg" },
     div(

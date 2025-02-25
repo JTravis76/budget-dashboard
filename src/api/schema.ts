@@ -18,3 +18,16 @@ export class Transaction implements ITransaction {
   amount: number;
   tag: string | null;
 }
+
+export class User implements IUser {
+  constructor(init?: Partial<IUser>) {
+    this.email = "";
+    this.password = "";
+    this.darkTheme = false;
+
+    if (init) Object.assign(this, init);
+  }
+  email: string;
+  password: string;
+  darkTheme: boolean;
+}

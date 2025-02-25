@@ -13,9 +13,9 @@ import { PageLoader } from "./components/page-loader";
 import $store from "./stores";
 import { Await } from "./lib/await";
 
-const { div, main } = van.tags;
-//-------------------------------------------
 export const App = () => {
+  const { div, main } = van.tags;
+  //------------------------------------------- 
   $store.user.getUser();
   //-------------------------------------------
   return Await({
@@ -28,7 +28,7 @@ export const App = () => {
         LayoutHeader(),
         main(
           viewrouter(),
-          div({ style: "height:180px;" }),
+          div({ class: "footer-padding" }),
         ),
         LayoutSideBar(),
         LayoutFooter(),

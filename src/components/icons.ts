@@ -12,8 +12,6 @@
  */
 import van from "vanjs-core"
 
-const { svg, path, g, circle, animate } = van.tags("http://www.w3.org/2000/svg");
-//-------------------------------------------
 interface IProp {
   class?: string;
   width?: string;
@@ -21,6 +19,8 @@ interface IProp {
 }
 //-------------------------------------------
 export const IconDownload = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -34,6 +34,8 @@ export const IconDownload = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconEdit = (props?: IProp) => {
+  const { svg, path, g } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -57,6 +59,8 @@ export const IconEdit = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconRemove = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -74,6 +78,8 @@ export const IconRemove = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconEnvelope = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -96,6 +102,8 @@ export const IconEnvelope = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconLock = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -114,6 +122,8 @@ export const IconLock = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconEraser = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -134,6 +144,8 @@ export const IconEraser = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconEllipsisV = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -152,6 +164,8 @@ export const IconEllipsisV = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconNewFolder = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -170,6 +184,8 @@ export const IconNewFolder = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconTrash = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -192,6 +208,8 @@ export const IconTrash = (props?: IProp) => {
 }
 //-------------------------------------------
 export const IconThreeDotsLoading = (props?: IProp) => {
+  const { svg, circle, animate } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
   return svg(
     {
       class: props?.class ?? "",
@@ -232,6 +250,57 @@ export const IconThreeDotsLoading = (props?: IProp) => {
         repeatCount: "indefinite",
         values: "0;2;0;0"
       }),
+    ),
+  );
+}
+//-------------------------------------------
+export const IconMoon = (props?: IProp) => {
+  const { svg, g, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
+  return svg(
+    {
+      class: props?.class ?? "",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: props?.width ?? "24",
+      height: props?.height ?? "24",
+      viewBox: "0 0 24 24"
+    },
+    g(
+      {
+        fill: "none",
+        fillRule: "evenodd",
+      },
+      path(
+        {
+          d: "m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+        }
+      ),
+      path(
+        {
+          fill: "currentColor",
+          d: "M13.574 3.137a1.01 1.01 0 0 0-1.097 1.409a6 6 0 0 1-7.931 7.931a1.01 1.01 0 0 0-1.409 1.097A9 9 0 0 0 21 12c0-4.434-3.206-8.118-7.426-8.863m1.307 2.481A7.002 7.002 0 0 1 12 19a7 7 0 0 1-6.382-4.12a8 8 0 0 0 9.263-9.263Z"
+        }
+      ),
+    ),
+  );
+}
+//-------------------------------------------
+export const IconSun = (props?: IProp) => {
+  const { svg, path } = van.tags("http://www.w3.org/2000/svg");
+  //-------------------------------------------
+  return svg(
+    {
+      class: props?.class ?? "",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: props?.width ?? "24",
+      height: props?.height ?? "24",
+      viewBox: "0 0 24 24"
+    },
+    path(
+      {
+        fill: "none", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2",
+        d: "M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-4-9v2m0 14.004v2M5 12H3m18 0h-2m0-7l-2 2M5 5l2 2m0 10l-2 2m14 0l-2-2"
+      }
     ),
   );
 }

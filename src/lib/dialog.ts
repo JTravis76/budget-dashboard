@@ -4,8 +4,6 @@
  */
 import van from "vanjs-core";
 
-const { dialog, button, div, p } = van.tags;
-//---------------------------------------------
 type ControlType = "ok" | "yesno";
 
 interface IDialogOption {
@@ -16,6 +14,8 @@ interface IDialogOption {
 }
 //---------------------------------------------
 async function createDialog(opt?: string | IDialogOption): Promise<boolean> {
+  const { dialog, button, div, p } = van.tags;
+  //---------------------------------------------
   let defaultOpt = {
     message: "Place your confirmation message here",
     backdrop: true,

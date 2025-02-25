@@ -3,33 +3,34 @@ import emitter from "../lib/event-emitter";
 import { SearchFilter } from "../models";
 import $store from "../stores";
 
-const { div, label, input, button, small, form, select, option } = van.tags;
-//---------------------------------------------
-const { tags } = $store.tag;
-//---------------------------------------------
-const advSearch = van.state(false);
-let filters = new SearchFilter();
-//---------------------------------------------
-function reset() {
-  filters = new SearchFilter();
-}
-//---------------------------------------------
-let tagSelect = select(
-  {
-    class: "input",
-    onchange: (e: Event) => filters.tag = (e.target as HTMLSelectElement).value
-  },
-  option({ value: "" }, ""),
-);
-
-van.derive(() => {
-  let optionList = new Array<HTMLOptionElement>();
-  optionList = tags.val.map((tag) => option({ value: tag }, tag),
-  );
-  van.add(tagSelect, optionList);
-});
-//-------------------------------------------
 export const TransactionFilter = () => {
+  const { div, label, input, button, small, form, select, option } = van.tags;
+  //---------------------------------------------
+  const { tags } = $store.tag;
+  //---------------------------------------------
+  const advSearch = van.state(false);
+  let filters = new SearchFilter();
+  //---------------------------------------------
+  function reset() {
+    filters = new SearchFilter();
+  }
+  //---------------------------------------------
+  let tagSelect = select(
+    {
+      class: "input",
+      onchange: (e: Event) => filters.tag = (e.target as HTMLSelectElement).value
+    },
+    option({ value: "" }, ""),
+    option({ value: "BLANK" }, "[BLANK]"),
+  );
+
+  van.derive(() => {
+    let optionList = new Array<HTMLOptionElement>();
+    optionList = tags.val.map((tag) => option({ value: tag }, tag),
+    );
+    van.add(tagSelect, optionList);
+  });
+  //-------------------------------------------
   return div({ class: "box" },
     form(
       div({ class: "is-pulled-right" },

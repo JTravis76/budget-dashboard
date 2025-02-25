@@ -43,3 +43,9 @@ interface IRuleProperty {
   amount: number;
   tag: string;
 }
+
+interface IUser {
+  email: string;
+  password: string;
+  darkTheme: boolean
+}

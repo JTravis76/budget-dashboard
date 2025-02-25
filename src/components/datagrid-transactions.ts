@@ -22,10 +22,9 @@ import $store from "../stores";
 import { Transaction } from "../api/schema";
 import emitter from "../lib/event-emitter";
 
-const { div, table, thead, tbody, tfoot, tr, th, td, button, input, select, option, span } = van.tags;
-
-//-------------------------------------------
 export const DatagridTransactions = (props: { transactions: ITransaction[] }) => {
+  const { div, table, thead, tbody, tfoot, tr, th, td, button, input, select, option, span } = van.tags;
+  //-------------------------------------------
   const { tags } = $store.tag;
   const { transaction } = $store.transaction;
   //---------------------------------------------

@@ -23,4 +23,5 @@ export default {
   transactions: new LocalDb("db"),
   tags: new LocalDb("tag"),
   rules: new LocalDb("rule"),
+  user: new LocalDb("user"),
 }

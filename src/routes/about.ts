@@ -1,9 +1,8 @@
 import van from "vanjs-core";
 
-const { div, blockquote, br, code, h1, h2, h3, li, p, pre, ul } = van.tags
-
-
 export const About = () => {
+  const { div, blockquote, br, code, h1, h2, h3, li, p, pre, ul } = van.tags
+  //---------------------------------------------
   return div({ class: "container mt-2" },
     div({ class: "box content" },
       h1({ class: "title is-2" },

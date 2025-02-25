@@ -15,17 +15,18 @@ import van from "vanjs-core";
 import emitter from "../lib/event-emitter";
 import { Pager, SearchFilter } from "../models";
 
-const { div, nav, ul, li, span, a, select, option } = van.tags;
 //---------------------------------------------
 interface IProp {
   page: number;
   pagesize: number;
   total: number;
 }
-//---------------------------------------------
-let filters = new SearchFilter();
-//---------------------------------------------
+
 export const Pagination = (props?: IProp) => {
+  const { div, nav, ul, li, span, a, select, option } = van.tags;
+  //---------------------------------------------
+  let filters = new SearchFilter();
+  //---------------------------------------------
   const pager = new Pager(props);
   let pages = van.state(new Array<number>());
 

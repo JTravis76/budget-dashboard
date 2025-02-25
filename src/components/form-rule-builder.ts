@@ -13,9 +13,8 @@ import $toast from "../lib/toast";
 import $modal from "../lib/modal";
 import { IconThreeDotsLoading } from "./icons";
 
-const { div, label, input, select, option, button } = van.tags;
-
 export const FormRuleBuilder = () => {
+  const { div, label, input, select, option, button } = van.tags;
   //---------------------------------------------
   let loading = van.state(false);
   const { tags, rule } = $store.tag;

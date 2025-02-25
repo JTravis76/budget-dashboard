@@ -62,3 +62,9 @@ export function sumBy<T extends Record<PropertyKey, any>>(
   });
   return result;
 }
+
+/** Set between light and dark theme */
+export function setTheme(dark: boolean = false) {
+  const root = document.getElementsByTagName('html')[0] as HTMLHtmlElement;
+  root.className = dark ? "theme-dark js" : "theme-light js";
+}

@@ -6,11 +6,10 @@ import van from "vanjs-core";
 import $store from "../stores";
 import { IconEnvelope, IconLock } from "../components/icons";
 
-const { button, div, form, input, label, section, span } = van.tags
-
-//-------------------------------------------
 export const Login = (redirect?: string) => {
-  let username = van.state("");
+  const { button, div, form, input, label, section, span } = van.tags
+  //---------------------------------------------
+  let email = van.state("");
   let password = van.state("");
   //-------------------------------------------
   return section({ class: "hero" },
@@ -30,7 +29,7 @@ export const Login = (redirect?: string) => {
                       placeholder: "e.g. bobsmith@gmail.com",
                       class: "input",
                       required: "",
-                      oninput: (e: Event) => username.val = (e.target as HTMLInputElement).value
+                      oninput: (e: Event) => email.val = (e.target as HTMLInputElement).value
                     }),
                   span({ class: "icon is-small is-left" },
                     IconEnvelope(),
@@ -67,7 +66,7 @@ export const Login = (redirect?: string) => {
                     type: "button",
                     class: "button is-success",
                     onclick: () => {
-                      $store.user.login(username.val, password.val)
+                      $store.user.login(email.val, password.val)
                         .then((res) => {
                           if (res == 200)
                             window.location.href = redirect ? `./#${redirect}` : "./";

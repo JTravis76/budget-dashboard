@@ -3,9 +3,9 @@ import $store from "../stores";
 import $toast from "../lib/toast";
 import { IconThreeDotsLoading } from "./icons";
 
-const { div, h4, p, button, input, label, br } = van.tags;
-
 export const SettingTagRule = () => {
+  const { div, h4, p, button, input, label, br } = van.tags;
+  //---------------------------------------------
   let loading = van.state(false);
   let runType = van.state(0);
   let style = "border-left: 2px solid; padding-left: 10px;";

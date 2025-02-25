@@ -47,3 +47,7 @@ export const rules = [
     ]
   }
 ];
+
+export const users = [
+  { email: "", password: "Og==", darkTheme: false }
+];

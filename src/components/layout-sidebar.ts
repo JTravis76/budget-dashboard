@@ -1,7 +1,7 @@
 import van from "vanjs-core";
 
-const { aside } = van.tags;
-
 export const LayoutSideBar = () => {
+  const { aside } = van.tags;
+  //-------------------------------------------
   return aside({ class: "sidebar-left" });
 }

@@ -6,9 +6,9 @@ import { ChartTwo } from "../components/chart-two";
 import emitter from "../lib/event-emitter";
 import $store from "../stores";
 
-const { div } = van.tags;
-
 export const Dashboard = async () => {
+  const { div } = van.tags;
+  //---------------------------------------------
   await $store.dashboard.getAllTransactions();
   //---------------------------------------------
   let loading = van.state(true);
