@@ -19,15 +19,21 @@ export class Transaction implements ITransaction {
   tag: string | null;
 }
 
-export class User implements IUser {
-  constructor(init?: Partial<IUser>) {
+export class User implements ILoginResponse {
+  constructor(init?: Partial<ILoginResponse>) {
+    this.id = 0;
+    this.firstName = "";
+    this.lastName = "";
     this.email = "";
-    this.password = "";
     this.darkTheme = false;
+    this.token = null;
 
     if (init) Object.assign(this, init);
   }
+  id: number;
+  firstName: string;
+  lastName: string;
   email: string;
-  password: string;
   darkTheme: boolean;
+  token: string | null;
 }

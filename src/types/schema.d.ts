@@ -7,3 +7,20 @@ interface ITransaction {
   amount: number;
   tag: string | null;
 }
+
+interface IBaseResponse {
+  message: string | null;
+}
+
+interface ILoginResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  darkTheme: boolean;
+  token: string | null;
+}
+
+interface ILoginRequest {
+  credential?: string | null;
+}

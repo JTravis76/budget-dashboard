@@ -1,5 +1,5 @@
 /** HTTP Client
- * This library is an attempt to make a HTTP client wrapper that closely matches axios
+ * This library is an attempt to make a HTTP client wrapper that closely matches Axios
  * but with Fetch API
  */
 
@@ -204,6 +204,9 @@ class HttpClient implements IHttpClient {
     return "";
   }
 
+  // TODO: private method to generate the request type- factory builder; 
+  // This should reduce the boilerplate code in the get, post, put, etc methods.
+
   private async sendAsync(
     url: string,
     data: unknown,
@@ -228,47 +231,29 @@ class HttpClient implements IHttpClient {
     } else if (data && typeof data === "object")
       config.body = JSON.stringify(data);
 
-    return new Promise((resolve, reject) => {
-      fetch(url, {
-        headers,
-        ...config,
-      })
-        .then(async (resp) => {
-          if (!resp.ok) {
-            this._failure(resp);
-            switch (resp.status) {
-              case 400:
-                reject("Validation error");
-                break;
-              case 401:
-                reject("401 (Unathorized)");
-                break;
-              case 500:
-                reject("Server error");
-                break;
-              default:
-                console.error(resp);
-                break;
-            }
-            return;
-          }
+    try {
+      const response = await fetch(url, { headers, ...config });
 
-          this._success({ response: { status: resp.status } });
-          //resp.headers.forEach((v, k) => console.log(`${k}: ${v}`));
-          if (
-            resp.headers
-              .get("content-type")
-              ?.includes("application/octet-stream")
-          )
-            return await resp.blob();
+      let data: any;
+      //resp.headers.forEach((v, k) => console.log(`${k}: ${v}`));
+      const contextType = response.headers.get("content-type") ?? "";
+      if (contextType.includes("application/octet-stream")) data = await response.blob();
+      else if (contextType.includes("application/json")) data = await response.json();
+      else data = await response.text();
 
-          if (resp.headers.get("content-type")?.includes("application/json")) {
-            return await resp.json();
-          }
-          return await resp.text();
-        })
-        .then((d) => resolve(d));
-    });
+      if (response.ok) {
+        this._success(response);
+        return data;
+      }
+
+      this._failure(response, data);
+      throw new Error(data);
+
+    } catch (error: any) {
+      // Handle network or parsing errors
+      //console.error(error.message);
+      throw error; // re-throwing the error allows the user to catch
+    }
   }
 }
 

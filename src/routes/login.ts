@@ -67,9 +67,8 @@ export const Login = (redirect?: string) => {
                     class: "button is-success",
                     onclick: () => {
                       $store.user.login(email.val, password.val)
-                        .then((res) => {
-                          if (res == 200)
-                            window.location.href = redirect ? `./#${redirect}` : "./";
+                        .then(() => {
+                          window.location.href = redirect ? `./#${redirect}` : "./";
                         });
                     }
                   },
