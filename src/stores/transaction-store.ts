@@ -1,11 +1,13 @@
 import van from "vanjs-core";
 import http from "../api/swagger-client";
+import controller from "../api/controller";
 import { Transaction } from "../api/schema";
 
 export const useTransactionStore = () => {
   let transaction = van.state(new Transaction());
   //-------------------------------------------
   async function getTransactions(filter?: ISearchFilter) {
+    //controller.transactions.get(1, 25).then((d) => console.log(d));
     return await http.transactions.get(filter);
   }
   //-------------------------------------------

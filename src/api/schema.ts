@@ -2,6 +2,7 @@ export class Transaction implements ITransaction {
   constructor(init?: Partial<ITransaction>) {
     this.id = 0;
     this.dttm = null;
+    this.date = null;
     this.transaction = "CREDIT";
     this.name = "";
     this.memo = null;
@@ -12,6 +13,7 @@ export class Transaction implements ITransaction {
   }
   id: number;
   dttm: string | null;
+  date: string | null;
   transaction: string;
   name: string;
   memo: string | null;

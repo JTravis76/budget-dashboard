@@ -27,29 +27,25 @@ export const useUserStore = () => {
     });
   }
   //-------------------------------------------
-  async function getUser() {
-    return new Promise((r) => {
-      let parts = $cookie.get().split(";");
-      parts.forEach((p) => {
-        let arr = p.split("=");
-        switch (arr[0].trim()) {
-          case "email":
-            http.user.get(arr[1])
-              .then((res) => {
-                profile.val = new User(res ?? {});
-                setTheme(profile.val.darkTheme);
-              });
-            break;
+  function getUser() {
+    let parts = $cookie.get().split(";");
+    parts.forEach((p) => {
+      let arr = p.split("=");
+      switch (arr[0].trim()) {
+        case "email":
+          controller.user.get(arr[1])
+            .then((res) => {
+              profile.val = new User(res ?? {});
+              setTheme(profile.val.darkTheme);
+            })
+          break;
 
-          case "expires":
-            // check if expired
-            authenticated.val = (new Date() <= new Date(arr[1]));
-            if (authenticated.val) $cookie.setExpire(profile.val.email);
-            break;
-        }
-      });
-
-      r(200);
+        case "expires":
+          // check if expired
+          authenticated.val = (new Date() <= new Date(arr[1]));
+          if (authenticated.val) $cookie.setExpire(profile.val.email);
+          break;
+      }
     });
   }
   //-------------------------------------------
